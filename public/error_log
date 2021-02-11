@@ -1,0 +1,10 @@
+[08-Aug-2020 09:38:16 UTC] PHP Fatal error:  Interface 'Maatwebsite\Excel\Concerns\DeletedFromCollection' not found in /home/maanmsre/public_html/app/Imports/Deleted_formsExport.php on line 6
+[08-Aug-2020 09:41:42 UTC] PHP Fatal error:  Interface 'Maatwebsite\Excel\Concerns\DeletedFromCollection' not found in /home/maanmsre/public_html/app/Imports/Deleted_formsExport.php on line 6
+[08-Aug-2020 09:48:52 UTC] PHP Fatal error:  Interface 'Maatwebsite\Excel\Concerns\DeletedFromCollection' not found in /home/maanmsre/public_html/app/Imports/Deleted_formsExport.php on line 6
+[19-Aug-2020 11:39:54 UTC] PHP Fatal error:  Cannot use Maatwebsite\Excel\Facades\Excel as Excel because the name is already in use in /home/maanmsre/public_html/app/Http/Controllers/Account/CitizenController.php on line 27
+[19-Aug-2020 11:40:29 UTC] PHP Fatal error:  Cannot use Maatwebsite\Excel\Facades\Excel as Excel because the name is already in use in /home/maanmsre/public_html/app/Http/Controllers/Account/CitizenController.php on line 27
+[19-Aug-2020 12:38:25 UTC] PHP Fatal error:  Cannot use App\Imports\CitizenImport as CitizenImport because the name is already in use in /home/maanmsre/public_html/app/Http/Controllers/Account/CitizenController.php on line 23
+[19-Aug-2020 12:38:28 UTC] PHP Fatal error:  Cannot use App\Imports\CitizenImport as CitizenImport because the name is already in use in /home/maanmsre/public_html/app/Http/Controllers/Account/CitizenController.php on line 23
+[19-Aug-2020 12:38:30 UTC] PHP Fatal error:  Cannot use App\Imports\CitizenImport as CitizenImport because the name is already in use in /home/maanmsre/public_html/app/Http/Controllers/Account/CitizenController.php on line 23
+[19-Aug-2020 12:38:34 UTC] PHP Fatal error:  Cannot use App\Imports\CitizenImport as CitizenImport because the name is already in use in /home/maanmsre/public_html/app/Http/Controllers/Account/CitizenController.php on line 23
+[19-Aug-2020 12:38:55 UTC] PHP Fatal error:  Cannot use App\Imports\CitizenImport as CitizenImport because the name is already in use in /home/maanmsre/public_html/app/Http/Controllers/Account/CitizenController.php on line 23
