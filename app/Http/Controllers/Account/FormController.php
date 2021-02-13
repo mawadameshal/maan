@@ -116,8 +116,9 @@ class FormController extends BaseController
         }
 
         if ($item->category_id) {
-            $item->old_category = $item->category_id;
+            $item->old_category_id = $item->category_id;
             $item->change_by = \auth()->user()->id;
+            $item->user_change_category_id = \auth()->user()->id;
             $item->category_id = $request['category_id'];
             $item->save();
 
@@ -157,16 +158,46 @@ class FormController extends BaseController
         }
 
         if ($request['need_clarification']){
+
             $item->reformulate_content = $item->content;
             $item->need_clarification = $request['need_clarification'];
             $item->have_clarified = $request['have_clarified'];
             $item->content = $request['reformulate_content'];
             $item->reason_lack_clarification = $request['reason_lack_clarification'];
             $item->reprocessing = $request['reprocessing'];
+            $item->user_change_content_id = \auth()->user()->id;
             $item->save();
 
-            return Response(['success' => true,'msg' => "تم الحفظ بنجاح"]);
+            if(!empty($request['reason_lack_clarification'])){
+
+                $theform = $item;
+                if ($theform->project->account_projects->first() && $theform->category->circle_categories->first()) {
+                    $accouts_ids_in_circle = Account::WhereIn('circle_id', $theform->category->circle_categories->where('to_notify', 1)
+                        ->pluck('circle_id')->toArray())->pluck('id')->toArray();
+                    $accouts_ids_in_project = $theform->project->account_projects->where('to_notify', 1)
+                        ->pluck('account_id')->toArray();
+                    $accouts_ids = array_merge($accouts_ids_in_circle, $accouts_ids_in_project);
+
+                    $users_ids = Account::find($accouts_ids)->pluck('user_id');
+                    $circle_ids = Account::find($accouts_ids)->pluck('circle_id');
+
+
+
+                    for ($i = 0; $i < count($users_ids); $i++) {
+
+                        if($circle_ids[$i] == 4){
+                            User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id);
+                            NotificationController::insert(['user_id' => $users_ids[$i], 'type' => 'موظف','form_id' => $theform->id, 'title' => 'تنبيه بوجود اقتراح / شكوى لا يمكن الاستيضاح عن مضمونه/ا', 'link' => "/citizen/form/show/" . $theform->citizen->id_number . "/$theform->id"]);
+                        }
+
+                    }
+                }
+
+
+            }
         }
+
+        return Response(['success' => true,'msg' => "تم الحفظ بنجاح"]);
 
     }
 

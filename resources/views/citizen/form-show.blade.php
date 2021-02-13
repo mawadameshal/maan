@@ -182,42 +182,54 @@
                         <div class="panel">
                             <table class="table table-hover table-striped table-bordered" style="width:100%;white-space:normal;">
                                 <tr>
-                                    <td class="mo">طريقة الاستقبال</td>
-                                    <td>{{$item->sent_typee->name}}</td>
+                                    <td class="mo" colspan="2">طريقة الاستقبال</td>
+                                    <td colspan="2">{{$item->sent_typee->name}}</td>
                                 </tr>
                                 <tr>
                                     <td class="mo">تاريخ تقديم ال{{$form_type->find($type)->name}}</td>
                                     <td>{{date('d-m-Y', strtotime( $item->created_at))}}</td>
-                                </tr>
-                                <tr>
                                     <td class="mo">تاريخ تسجيل ال{{$form_type->find($type)->name}} علي النظام</td>
                                     <td>{{date('d-m-Y', strtotime( $item->created_at))}}</td>
                                 </tr>
 
                                 <tr>
-                                    <td class="mo">فئة ال{{$form_type->find($type)->name}}</td>
-                                    <td>{{$item->category->name}}</td>
+                                    <td class="mo" colspan="2">فئة ال{{$form_type->find($type)->name}}</td>
+                                    <td colspan="2">{{$item->category->name}}</td>
                                 </tr>
 
-                                @if($item->old_category)
+                                @if($item->old_category_id)
                                 <tr>
-                                    <td class="mo">فئة ال{{$form_type->find($type)->name}}</td>
-                                    <td>{{$item->category->name}}</td>
+                                    <td class="mo">فئة ال{{$form_type->find($type)->name}} المعدلة </td>
+                                    <td>{{$item->old_category->name}}</td>
+
+                                    <td class="mo">اسم المستخدم الذي قام بالتعديل</td>
+                                    <td>{{$item->user_change_category->name}}</td>
                                 </tr>
+
                                 @endif
 
                                 <tr>
-                                    <td class="mo">موضوع ال{{$form_type->find($type)->name}}</td>
-                                    <td>{{$item->form_type->name}} {{$item->title }}</td>
+                                    <td class="mo" colspan="2">موضوع ال{{$form_type->find($type)->name}}</td>
+                                    <td colspan="2">{{$item->form_type->name}} {{$item->title }}</td>
                                 </tr>
                                 <tr>
-                                    <td class="mo">محتوى ال{{$form_type->find($type)->name}}</td>
-                                    <td>{{$item->content}}</td>
+                                    <td class="mo" colspan="2">محتوى ال{{$form_type->find($type)->name}}</td>
+                                    <td colspan="2">{{$item->content}}</td>
                                 </tr>
 
+                                @if($item->reformulate_content)
+                                    <tr>
+                                        <td class="mo">محتوى ال{{$form_type->find($type)->name}} المعدل بعد الاستيضاح </td>
+                                        <td>{{$item->content}}</td>
+
+                                        <td class="mo">اسم المستخدم الذي قام بالاستيضاح</td>
+                                        <td>{{$item->user_change_content->name}}</td>
+                                    </tr>
+                                @endif
+
                                 <tr>
-                                    <td class="mo">المرفقات</td>
-                                    <td><?php
+                                    <td class="mo" colspan="2">المرفقات</td>
+                                    <td colspan="2"><?php
                                         $form_files = \App\Form_file::where('form_id', '=', $item->id)->get();
 
                                         if(!$form_files->isEmpty()){
@@ -237,11 +249,10 @@
                             </table>
                         </div>
                         {{-------------------------------------------------------}}
-                        @if(Auth::user())
-                            <button class="accordion">
-                                ثالثا: الحاجة للاستيضاح عن مضمون ال{{$form_type->find($type)->name}}
-                            </button>
-                            <div class="panel" id="explain_div">
+                        <button class="accordion">
+                            ثالثا: الحاجة للاستيضاح عن مضمون ال{{$form_type->find($type)->name}}
+                        </button>
+                        <div class="panel" id="explain_div">
                                 <br>
                                 <form id="update_clarification_form_modal">
                                     <input type="hidden" id="clarification_id" value="{{$item->id}}">
@@ -346,25 +357,22 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <div class="col-sm-2">
-                                                <button id="submit_update_clarification" class="btn btn-danger">حفظ</button>
-                                            </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-2">
+                                            <button id="submit_update_clarification" class="btn btn-danger">حفظ</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
-                        @endif
+
                         {{-------------------------------------------------------}}
-                        @if(auth()->user())
-                            @if(auth()->user()->account->circle->circle_categories->where('category_id',$item->category->id)->where('to_edit',1)->first()
-                        &&
-                        auth()->user()->account->account_projects->where('project_id',$item->project->id)->where('to_edit',1)->first()
-                        )
-                                <button class="accordion">
-                                    رابعاً: الحاجة لإعادة تصنيف فئة ال{{$form_type->find($type)->name}}
-                                </button>
-                                <div class="panel" id="changecategorydiv">
+
+                        <button class="accordion hide_div">
+                            رابعاً: الحاجة لإعادة تصنيف فئة ال{{$form_type->find($type)->name}}
+                        </button>
+                        <div class="panel hide_div" id="changecategorydiv">
                                     <br>
                                     <form id="update_category_form_modal">
                                         <input type="hidden" id="updated_category_id" value="{{$item->id}}">
@@ -421,16 +429,13 @@
                                         </div>
                                     </form>
                                 </div>
-                            @endif
-                        @endif
+
                         {{-------------------------------------------------------}}
-                        <button class="accordion">
+                        <button class="accordion hide_div">
                             خامساً: الردود والمتابعات
                         </button>
-                        <div class="panel" id="replies">
+                        <div class="panel hide_div" id="replies">
                             <br>
-                           {{--1--}}
-                            @if(Auth::user())
                             <div class="form-group row">
                                 <div class="col-sm-4">
                                     <label for="sent_type" class="col-sm-4 col-form-label">حالة الرد</label>
@@ -503,39 +508,36 @@
                             </form>
                             {{--3--}}
                             <hr>
-                            @endif
-                            @if(Auth::user())
-                                <div class="col-sm-12" style="text-align: center;">
-                                    @if($item->type=='1')
-                                        @if($item->status!="3"
+                            <div class="col-sm-12" style="text-align: center;">
+                                @if($item->type=='1')
+                                    @if($item->status!="3"
+                                    &&
+                                        Auth::user()->account->circle->circle_categories->where('category_id',$item->category->id)->where('to_replay',1)->first()
                                         &&
-                                            Auth::user()->account->circle->circle_categories->where('category_id',$item->category->id)->where('to_replay',1)->first()
-                                            &&
-                                            Auth::user()->account->account_projects->where('project_id',$item->project->id)->where('to_replay',1)->first()
-                                            )
-                                            <form method="post" action="/account/form/addreplay/{{$item->id}}">
-                                                @csrf
-                                                <textarea name="response" rows="8" cols="105" style="border-radius: 10px;"></textarea><br>
-                                                <input type="submit" class="btn btn-info" style="width: 70%; background-color:#BE2D45; margin-bottom:10px;border:none;" value="إرسال الرد">
-                                            </form>
-                                        @endif
-                                    @elseif($item->status!="3"
-                                        &&
-                                            Auth::user()->account->circle->circle_categories->where('category_id',$item->category->id)->where('to_replay',1)->first()
-                                            &&
-                                            Auth::user()->account->account_projects->where('project_id',$item->project->id)->where('to_replay',1)->first()
-                                            )
+                                        Auth::user()->account->account_projects->where('project_id',$item->project->id)->where('to_replay',1)->first()
+                                        )
                                         <form method="post" action="/account/form/addreplay/{{$item->id}}">
                                             @csrf
                                             <textarea name="response" rows="8" cols="105" style="border-radius: 10px;"></textarea><br>
-                                            <input type="submit" value="إرسال الرد">
+                                            <input type="submit" class="btn btn-info" style="width: 70%; background-color:#BE2D45; margin-bottom:10px;border:none;" value="إرسال الرد">
                                         </form>
                                     @endif
+                                @elseif($item->status!="3"
+                                    &&
+                                        Auth::user()->account->circle->circle_categories->where('category_id',$item->category->id)->where('to_replay',1)->first()
+                                        &&
+                                        Auth::user()->account->account_projects->where('project_id',$item->project->id)->where('to_replay',1)->first()
+                                        )
+                                    <form method="post" action="/account/form/addreplay/{{$item->id}}">
+                                        @csrf
+                                        <textarea name="response" rows="8" cols="105" style="border-radius: 10px;"></textarea><br>
+                                        <input type="submit" value="إرسال الرد">
+                                    </form>
+                                @endif
 
 
-                                </div>
-                                <br><br><br>
-                            @endif
+                            </div>
+                            <br><br><br>
 
                             <hr>
                             <?php
@@ -610,16 +612,14 @@
                                 </div>
 
                             </div>
-
-
                         </div>
 
                         {{-------------------------------------------------------}}
-                        @if(Auth::user())
-                            <button class="accordion" id="deleted">
-                                سادساً : الحاجة لحذف ال{{$form_type->find($type)->name}}
-                            </button>
-                            <div class="panel" id="deleted_main_div">
+
+                        <button class="accordion hide_div" id="deleted">
+                            سادساً : الحاجة لحذف ال{{$form_type->find($type)->name}}
+                        </button>
+                        <div class="panel hide_div" id="deleted_main_div">
                                 <br>
                                 <form id="delete_form_modal">
                                     <input type="hidden" id="deleted_id" value="{{$item->id}}">
@@ -676,12 +676,11 @@
                                     </div>
                                 </form>
                             </div>
-                        @endif
                         {{-------------------------------------------------------}}
-                        <button class="accordion">
+                        <button class="accordion hide_div">
                             سابعاً: التغذية الراجعة
                         </button>
-                        <div class="panel" id="rank_div">
+                        <div class="panel hide_div" id="rank_div">
                             <br>
                             @if(!auth()->user() && $item->status!="3" )
                                 <div class="col-sm-12" >
@@ -898,22 +897,19 @@
                                                 @endif
                                             @endif
                                         </div>
-                                    </div>
-
-
-
                                 </form>
                             @endif
                         </div>
                         {{-------------------------------------------------------}}
-                        @if(Auth::user())
-                            <button class="accordion">
-                                ثامناً: توصيات ذات العلاقة بمحتوى ال{{$form_type->find($type)->name}}
-                            </button>
-                            <div class="panel">
-                                <h4>عزيزي الموظف يمكنك من هنا رفع التوصيات التي تستحق الدراسة من قبل المركز لاتخاذها بعين الاعتبار
-                                    في تصميم مشاريع مستقبلية:</h4>
+                        <button class="accordion hide_div">
+                            ثامناً: توصيات ذات العلاقة بمحتوى ال{{$form_type->find($type)->name}}
+                        </button>
+                        <div class="panel hide_div">
+
                                 <br>
+                                @if(!$recomendations)
+                                    <h4>عزيزي الموظف يمكنك من هنا رفع التوصيات التي تستحق الدراسة من قبل المركز لاتخاذها بعين الاعتبار
+                                        في تصميم مشاريع مستقبلية:</h4>
                                 <form method="POST" class="form-horizontal" action="/citizen/saverecommendations">
                                     @csrf
                                     <input name="form_id" type="hidden" value="{{$item->id}}">
@@ -939,8 +935,14 @@
                                     </div>
 
                                 </form>
+                                @else
+                                    <div class="content">
+                                        <h5>{{$recomendations->content}}</h5>
+                                        <h6>بواسطة {{$recomendations->user->name}}</h6>
+                                    </div>
+                                @endif
                             </div>
-                        @endif
+
                         {{-------------------------------------------------------}}
 
 
@@ -1062,12 +1064,15 @@
                 if (inputValue == 1) {
                     $('#reformulate_div').show();
                     $('#reason_lack_clarification_div').hide();
+                    $('.hide_div').show();
                 } else if (inputValue == 0) {
                     $('#reason_lack_clarification_div').show();
                     $('#reformulate_div').hide();
+                    $('.hide_div').hide();
                 }else{
                     $('#reason_lack_clarification_div').hide();
                     $('#reformulate_div').hide();
+                    $('.hide_div').show();
                 }
             });
 
@@ -1135,6 +1140,7 @@
             $.post("/account/form/clarification_from_citizian/"+id, {"_token": "{{csrf_token()}}", "method": "put",
                 'need_clarification': need_clarification,'have_clarified':have_clarified,'reformulate_content':reformulate_content,
                 'reason_lack_clarification':reason_lack_clarification,'reprocessing':reprocessing}, function(data){
+                $('#message_session').show();
                 $('#content_message').text(data.msg);
             });
         });

@@ -9,10 +9,18 @@ class Form extends Model {
 	protected $table = "forms";
 	protected $fillable = ['title', 'type', 'citizen_id', 'project_id', 'sent_type' ,  'response_type'
 		, 'category_id','evaluate' ,'evaluate_note','status','is_report','follow_reason_not', 'content', 'datee', 'account_id','required_respond' , 'form_file' , 'form_data'
-        ,'show_data','type_of_followup_visit',''];
+        ,'show_data','type_of_followup_visit','old_category_id'];
 
 	public function citizen() {
 		return $this->belongsTo('App\Citizen');
+	}
+
+	public function user_change_category() {
+		return $this->belongsTo('App\User');
+	}
+
+	public function user_change_content() {
+		return $this->belongsTo('App\User');
 	}
 
 	public function sent_typee() {
@@ -32,6 +40,10 @@ class Form extends Model {
 	}
 
 	public function category() {
+		return $this->belongsTo('App\Category');
+	}
+
+    public function old_category() {
 		return $this->belongsTo('App\Category');
 	}
 

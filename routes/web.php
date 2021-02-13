@@ -42,6 +42,7 @@ Route::get('/forms/formsavenew',function (){$itemco=\App\Company::all()->first()
 Route::get('/forms/formsaveolde/{id}',function (){$itemco=\App\Company::all()->first(); return view('welcome',compact('itemco')); });
 Route::get('/forms/addfollow',function (){$itemco=\App\Company::all()->first(); return view('welcome',compact('itemco')); });
 Route::get('/forms/addevaluate',function (){$itemco=\App\Company::all()->first(); return view('welcome',compact('itemco')); });
+//Route::get('/account/events',function (){$itemco=\App\Company::all()->first(); return view('welcome',compact('itemco')); });
 //////
 Route::get('/account','Account\HomeController@dashboard');
 Route::get('/account/home/dashboard','Account\HomeController@dashboard');
@@ -52,6 +53,11 @@ Route::resource("/account/company","Account\CompanyController");
 Route::resource("/account/message","Citizen\MessageController");
 Route::get('/account/message/delete/{id}','Citizen\MessageController@destroy');
 Route::get('/back','Account\HomeController@backup');
+
+//الاجازات
+Route::get('/account/events', 'Account\EventController@index')->name('events.index');
+Route::post('/account/events', 'Account\EventController@addEvent')->name('events.add');
+
 
 Route::post('/back','Account\HomeController@backup');
 ///لوجين ونسيت
@@ -99,7 +105,6 @@ Route::get('/download-sample-file','Account\MessageController@download_sample_fi
 Route::post('/account/citizen/importcitizen','Account\CitizenController@save_citizen_data')->name('save-citizen-data');
 Route::post('/account/citizen/importcitizen/{id}','Account\ProjectController@import')->name('save-citizen-data-project');
 Route::get('/notbenfit','Account\CitizenController@not_benefit')->name('not_benefit');
-
 
 //ادارة الاشعارات
 
@@ -203,6 +208,8 @@ Route::get('password/reset', function () {
 Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+
+
 
 
 

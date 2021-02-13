@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Account;;
+namespace App\Http\Controllers\Account;
 
 use App\Account;
 use App\Account_rate;
