@@ -20,36 +20,39 @@
      <div class="row">
         <div class="col-sm-12">
 
-                <form method="post" action="events">
+                <form method="post" action="/account/events">
             @csrf
 
             <div class="form-group row">
-                <div class="col-sm-5">
+                <div class="col-sm-2">
                     <label for="event_name" class="col-form-label">طبيعة الاجازة: </label>
-    
+                </div>
+                    <div class="col-sm-4">
                     <input type="text" class="form-control" value="" id="event_name" name="event_name">
                 </div>
             </div>
 
             <div class="form-group row">
-                <div class="col-sm-5">
+                <div class="col-sm-2">
                             <label for="start_date" class="col-form-label"> من تاريخ:</label>
-    
+                        </div>
+                        <div class="col-sm-4">
                     <input type="date"  class="form-control " value="" id="start_date" name="start_date">
                 </div>
             </div>
 
             <div class="form-group row">
-                <div class="col-sm-5">
-                            <label for="start_date" class="col-form-label"> الي تاريخ:</label>
-    
+                <div class="col-sm-2">
+                            <label for="end_date" class="col-form-label"> الي تاريخ:</label>
+                        </div>
+                        <div class="col-sm-4">
                     <input type="date"  class="form-control " value="" id="end_date" name="end_date">
                 </div>
             </div>
 
-            <div class="form-group row">
+            <div class="form-group row" style="margin-right:400px;margin-bottom: 10px;">
                 <div class="col-sm-5 col-md-offset-5">
-                    <input type="submit" class="btn btn-success" value="حفظ"/>
+                    <input type="submit" class="btn btn-success" value="إضافة"/>
                     <a href="events" class="btn btn-light">الغاء الامر</a>
                 </div>
             </div>
@@ -70,35 +73,34 @@
 </div>
 
 <div class="row" style="margin-bottom: 10px;margin-top: 30px;margin-right: 0px;">
-    <form class="form-inline adv-searchh" >
-        
+    
       
-        <div class="form-group row ">
-            <div class="col-sm-4 adv-searchh">
-                <label for="event_name" class="col-form-label">طبيعة الاجازة </label>
 
-                <input type="text" class="form-control" value="{{old("event_name")}}" id="event_name" name="event_name" placeholder="طبيعة الاجازة">
+            <div class="col-sm-3 adv-searchh" style="margin-bottom: 10px;margin-top:26px;">
+             
+                <input type="text" class="form-control" value="{{old("event_name")}}" id="event_name" name="event_name" placeholder="طبيعة الإجازة">
+     
             </div>
-
-        <div class="form-group row ">
-            <div class="col-sm-4 adv-searchh">
+   
+            <div class="col-sm-3 adv-searchh">
                         <label for="start_date" class="col-form-label"> من تاريخ</label>
 
                 <input type="text" class="form-control datepicker" value="{{old("start_date")}}" id="start_date" name="start_date" placeholder="يوم / شهر / سنة">
             </div>
-        </div>
-        <div class="form-group row ">
-            <div class="col-sm-4 adv-searchh">
+        
+            <div class="col-sm-3 adv-searchh">
                         <label for="end_date" class="col-form-label"> الى تاريخ</label>
 
                 <input type="text" class="form-control datepicker" value="{{old("end_date")}}" id="end_date" name="end_date" placeholder="يوم / شهر / سنة">
             </div>
-        </div>
+     
       
-        <button type="submit"  name="theaction"  value="search" style="width:70px;margin-left: 10px;" class="btn btn-primary adv-searchh">
+        <button type="submit"  name="theaction"  value="search" style="width:70px;margin-left: 12px;margin-top:24px;" class="btn btn-primary adv-searchh">
                   <span class="glyphicon glyphicon-search" aria-hidden="true"></span>بحث
               </button>
-     </form>
+              
+              
+    
 </div>
 <br>
 
@@ -127,8 +129,19 @@
                     <td style="word-break: normal;">{{$a->event_name }}</td>
                     <td style="word-break: normal;">{{$a->start_date}}</td>
                     <td style="max-width: 60px;word-break: normal;">{{$a->end_date }}</td>
-                  
+                    <td>
 
+                        <a class="btn btn-xs btn-primary" title="تعديل" href="/account/events/edit/{{$a->id}}/edit"><i
+                            class="fa fa-edit"></i></a>
+
+                            <a class="btn btn-xs Confirm btn-danger"
+                            href="/account/events/delete/{{$a->id}}"><i
+                                 class="fa fa-trash"></i></a>
+
+                                 
+                    </td>
+
+                
                 </tr>
             @endif
             @endforeach

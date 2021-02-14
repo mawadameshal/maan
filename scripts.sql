@@ -12,3 +12,5 @@ ADD `user_change_content_id` INT(11) NULL DEFAULT NULL AFTER `user_change_catego
 INSERT INTO `links` (`id`, `title`, `url`, `icon`, `show_menu`, `parent_id`, `created_at`, `updated_at`) VALUES (NULL, 'الإجازات', '', 'icon-diamond', '1', '0', NULL, NULL);
 INSERT INTO `links` (`id`, `title`, `url`, `icon`, `show_menu`, `parent_id`, `created_at`, `updated_at`) VALUES (NULL, 'إدارة الإجازات', '/account/account', '', '1', '52', NULL, NULL);
 UPDATE `links` SET `url` = '/account/events', `created_at` = NULL, `updated_at` = NULL WHERE `links`.`id` = 53;
+
+UPDATE `links` SET `parent_id` = '6' WHERE `links`.`id` = 51;

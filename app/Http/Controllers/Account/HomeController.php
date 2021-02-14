@@ -20,7 +20,7 @@ class HomeController extends BaseController
     public function dashboard()
     {
         $item = auth()->user()->account;
-        $items = Account::find(auth()->user()->account->id)->projects()->orderBy("id")->paginate(12);
+        $items = Account::find(auth()->user()->account->id)->projects()->orderBy("id")->paginate(5);
         Project::where('end_date','<=',Carbon::now())->update(['active' => '2']);
 
         return view("account.home.dashboard", compact('items', 'item'));
