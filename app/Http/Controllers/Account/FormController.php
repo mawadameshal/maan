@@ -159,10 +159,9 @@ class FormController extends BaseController
 
         if ($request['need_clarification']){
 
-            $item->reformulate_content = $item->content;
+            $item->reformulate_content =  $request['reformulate_content'];
             $item->need_clarification = $request['need_clarification'];
             $item->have_clarified = $request['have_clarified'];
-            $item->content = $request['reformulate_content'];
             $item->reason_lack_clarification = $request['reason_lack_clarification'];
             $item->reprocessing = $request['reprocessing'];
             $item->user_change_content_id = \auth()->user()->id;

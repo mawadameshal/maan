@@ -58,7 +58,7 @@ Route::get('/back','Account\HomeController@backup');
 Route::get('/account/events', 'Account\EventController@index')->name('events.index');
 Route::post('/account/events', 'Account\EventController@addEvent')->name('events.add');
 Route::get('/account/events/edit/{id}', 'Account\EventController@edit')->name('events.edit');
-Route::get('/account/events/update/{id}', 'Account\EventController@update')->name('events.update');
+Route::post('/account/events/update/{id}', 'Account\EventController@update')->name('events.update');
 Route::get('/account/events/delete/{id}', 'Account\EventController@destory')->name('events.destory');
 
 

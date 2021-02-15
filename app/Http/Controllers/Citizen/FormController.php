@@ -37,7 +37,7 @@ class FormController extends Controller {
 			return redirect('/noaccses');
 		}
 
-        $categoryCircles_users1 = $categoryCircles_users2 = $categoryCircles_users3 = $auth_circle_users = array();
+        $categoryCircles_users1 = $categoryCircles_users2 = $categoryCircles_users3 = $auth_circle_users = $auth_circle_users2 = array();
         $categoryCircles = CategoryCircles::where('category' ,'=', $item->category->id)->get();
         $userinprojects = AccountProjects::select('rate','account_id')->where('project_id','=',$item->project_id)
             ->pluck('rate','account_id')->toArray();
@@ -60,6 +60,10 @@ class FormController extends Controller {
         foreach ($userinprojects as $key=>$userinproject){
             if(in_array($userinproject,$categoryCircles_users1)){
                 array_push($auth_circle_users,$key);
+            }
+
+            if(in_array($userinproject,$categoryCircles_users2)){
+                array_push($auth_circle_users2,$key);
             }
 
         }
@@ -90,7 +94,7 @@ class FormController extends Controller {
             $type = $item->type;
             $recomendations = Recommendation::where('form_id','=',$item->id)->first();
 			if ($item->citizen->id_number == $ido) {
-				return view("citizen.form-show", compact('item', 'categories', 'itemco','form_type','type','auth_circle_users','recomendations'));
+				return view("citizen.form-show", compact('item', 'categories', 'itemco','form_type','type','auth_circle_users','auth_circle_users2','recomendations'));
 			} else {
 				return view("citizen.noaccses", compact('item', 'itemco','form_type','type'));
 			}

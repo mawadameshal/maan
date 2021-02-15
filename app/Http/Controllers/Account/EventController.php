@@ -9,11 +9,12 @@ use App\Http\Controllers\Controller;
 use Auth;
 use Validator;
 use App\Event;
+use Session;
 
 class EventController extends Controller
 {
     public function index(Request $request){
-        $items = Event::get();
+        $items = Event::whereRaw("true");
 
         if ($items == null) {
             session::flash('msg', 'w:نأسف لا يوجد بيانات لعرضها');
@@ -35,7 +36,7 @@ class EventController extends Controller
         }
 
         if ($request['theaction'] == 'search'){
-            $items = $items->orderBy("created_at", 'desc')->paginate(5);
+            $items = $items->orderBy("id")->paginate(5);
 
             $items->appends([
                 "theaction" => "search",
@@ -63,7 +64,7 @@ class EventController extends Controller
 
         if ($validator->fails()) {
         	\Session::flash('warnning','Please enter the valid details');
-            return Redirect::to('/account/events/event')->withInput()->withErrors($validator);
+            return Redirect::to('/account/events')->withInput()->withErrors($validator);
         }
 
         $event = new Event;
@@ -72,20 +73,20 @@ class EventController extends Controller
         $event->end_date = $request['end_date'];
         $event->save();
 
-        \Session::flash('success','Event added successfully.');
-        return Redirect::to('/account/events.event');
+        Session::flash('msg','تم عملية اضافة بنجاح');
+        return Redirect::to('/account/events');
     }
 
-    
+
     public function edit($id){
 
-        $$item =$item::find($id);
+        $item =Event::find($id);
 
         if(!$item){
-            return Redirect::to('/account/events/event');
-        }
+            return Redirect::to('/account/events');
+        }else
         return view('account.events.edit')-> with([
-            'item' => $item, 
+            'item' => $item,
 
         ]);
 
@@ -96,7 +97,7 @@ class EventController extends Controller
         $item=Event::find($id);
 
         if(!$item){
-     		return  Redirect::to('/account/events/event');
+     		return  Redirect::to('/account/events');
      	}
          $item->update([
 
@@ -104,12 +105,11 @@ class EventController extends Controller
         'start_date'=>$request->input('start_date'),
         'end_date'=>$request->input('end_date'),
         ]);
-//        if($item == NULL || $item->id ==1  ||$item->id == 2){
-        if($item == NULL || $item->id == 1){
+        if($item == NULL){
             session::flash('msg','w:الرجاء التأكد من الرابط المطلوب');
-            return redirect('/account/events/event');
+            return redirect('/account/events');
         }else{
-            return view('account.events.event');
+            return Redirect::to('/account/events')->with('message','تم تعديل الإجازة بنجاح');
         }
     }
 
@@ -119,10 +119,19 @@ class EventController extends Controller
 
         if(!$item){
      		return  Redirect::to('/account/events')->with('message','غير متوفرة');
-     	
+
      	}
      	$item->delete();
-     	return Redirect::to('/account/events')->with('message','تم حدف الإجازة بنجاح');
-     	
+        Session::flash("msg", "تم حذف الإجازة بنجاح");
+        $items = Event::orderBy("id")->paginate(5)->appends([
+            "theaction" => "search",
+            "event_name"=>$request['event_name'],
+            "start_date"=>$request['start_date'],
+            "end_date"=>$request['end_date'],
+
+        ]);
+        return view('account.events.event', compact('items') );
+//        return  Redirect::to('/account/events')->with('items',$items);
+
      }
 }
