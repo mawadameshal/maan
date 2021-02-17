@@ -32,20 +32,16 @@ class FormController extends Controller {
 	public function show($ido, $id) {
 
 	    $item = Form::find($id);
-
-
-
 		if ($item == NULL) {
 			Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
 			return redirect('/noaccses');
 		}
 
-        $categoryCircles_users1 = $categoryCircles_users2 = $categoryCircles_users3 = $auth_circle_users = array();
+        $categoryCircles_users1 = $categoryCircles_users2 = $categoryCircles_users3 = $auth_circle_users = $auth_circle_users2 = array();
         $categoryCircles = CategoryCircles::where('category' ,'=', $item->category->id)->get();
         $userinprojects = AccountProjects::select('rate','account_id')->where('project_id','=',$item->project_id)
             ->pluck('rate','account_id')->toArray();
 
-//
         foreach ($categoryCircles as $categoryCircle){
             if($categoryCircle->procedure_type == 2){
                 array_push($categoryCircles_users1,$categoryCircle->circle);
@@ -64,6 +60,10 @@ class FormController extends Controller {
         foreach ($userinprojects as $key=>$userinproject){
             if(in_array($userinproject,$categoryCircles_users1)){
                 array_push($auth_circle_users,$key);
+            }
+
+            if(in_array($userinproject,$categoryCircles_users2)){
+                array_push($auth_circle_users2,$key);
             }
 
         }
@@ -92,8 +92,9 @@ class FormController extends Controller {
 			$itemco = \App\Company::all()->first();
             $form_type = Form_type::all();
             $type = $item->type;
+            $recomendations = Recommendation::where('form_id','=',$item->id)->first();
 			if ($item->citizen->id_number == $ido) {
-				return view("citizen.form-show", compact('item', 'categories', 'itemco','form_type','type','auth_circle_users'));
+				return view("citizen.form-show", compact('item', 'categories', 'itemco','form_type','type','auth_circle_users','auth_circle_users2','recomendations'));
 			} else {
 				return view("citizen.noaccses", compact('item', 'itemco','form_type','type'));
 			}
@@ -346,8 +347,36 @@ class FormController extends Controller {
             if($form){
                 $citizen_ido = Citizen::find($form->citizen_id)->id_number;
             }
+
             session::flash('msg', 'تم إضافة توصيتك بنجاح ');
-            return redirect('/citizen/form/show/' . $citizen_ido . '/' . $request['form_id']);
+            $theform = Form::find($request['form_id']);
+            if ($theform->project->account_projects->first() && $theform->category->circle_categories->first()) {
+                $accouts_ids_in_circle = Account::WhereIn('circle_id', $theform->category->circle_categories->where('to_notify', 1)
+                    ->pluck('circle_id')->toArray())->pluck('id')->toArray();
+                $accouts_ids_in_project = $theform->project->account_projects->where('to_notify', 1)
+                    ->pluck('account_id')->toArray();
+                $accouts_ids = array_merge($accouts_ids_in_circle, $accouts_ids_in_project);
+
+                $users_ids = Account::find($accouts_ids)->pluck('user_id');
+                $circle_ids = Account::find($accouts_ids)->pluck('circle_id');
+                $type="مواطن";
+                if (auth()->user()) {
+                    $type = "موظف";
+                }
+
+
+                for ($i = 0; $i < count($users_ids); $i++) {
+
+                    if($circle_ids[$i] == 4){
+                        User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id);
+                        NotificationController::insert(['user_id' => $users_ids[$i], 'type' => $type,'form_id' => $theform->id, 'title' => 'لديك توصية جديدة', 'link' => "/citizen/form/show/" . $theform->citizen->id_number . "/$theform->id"]);
+                    }
+
+                }
+           }
+
+
+            return redirect('/citizen/form/show/' . $citizen_ido . '/' . $form->id);
         }
 
     }

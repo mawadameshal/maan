@@ -13,4 +13,8 @@ class Recommendation extends Model
         return $this->hasMany('App\Form');
     }
 
+    public function user() {
+        return $this->belongsTo('App\User');
+    }
+
 }
