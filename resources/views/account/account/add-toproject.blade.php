@@ -5,7 +5,7 @@
 
 @section("content")
 
-    @if(Auth::user()->account->links->contains(\App\Link::where('title','=','تعديل حسابات')->first()->id))
+    @if(check_permission('تعديل حسابات'))
 
         <form method="post" action="/account/account/select-project-post/{{$item->id}}">
             @csrf

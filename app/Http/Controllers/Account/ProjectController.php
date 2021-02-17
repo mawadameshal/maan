@@ -45,9 +45,10 @@ class ProjectController extends BaseController
 
         $item = Project::find($id);
         if ($item == NULL ||
-            !(Auth::user()->account->links
-                ->contains(\App\Link::where('title', '=', 'تعديل مشروع')
-                    ->first()->id))
+            check_permission('تعديل مشروع')
+//            !(Auth::user()->account->links
+//                ->contains(\App\Link::where('title', '=', 'تعديل مشروع')
+//                    ->first()->id))
         ) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
             return redirect("/account/citizen");

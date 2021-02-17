@@ -146,4 +146,31 @@ class CircleController extends BaseController
             return redirect("/account/circle");
         }
     }
+
+    public function permission($id)
+    {
+        $item = Circle::find($id);
+        if ($item == NULL) {
+            Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
+            return redirect("/account/circle");
+        }
+        return view("account.circle.permission", compact("item"));
+    }
+
+    public function permissionPost(Request $request, $id)
+    {
+        $item = Circle::find($id);
+        if ($item == NULL) {
+            Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
+            return redirect("/account/circle");
+        }
+        \DB::table("circle_link")->where("circle_id", $id)->delete();
+        if ($request["permission"]) {
+            foreach ($request["permission"] as $link)
+                \DB::table("circle_link")->insert(["circle_id" => $id,
+                    "link_id" => $link]);
+        }
+        Session::flash("msg", "i:تمت عملية الحفظ بنجاح");
+        return redirect("/account/circle");
+    }
 }

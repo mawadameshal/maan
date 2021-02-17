@@ -491,7 +491,8 @@
                 $adminId = Auth::user()->account->id;
                 /*$links = \DB::table("links")->where("parent_id",0)->
                     whereRaw('id in (select link_id from admin_link where admin_id=?)',$adminId)->get();*/
-                $links = Auth::user()->account->links->where("show_menu", 1)->where("parent_id", 0);
+//                $links = Auth::user()->account->links->where("show_menu", 1)->where("parent_id", 0);
+                $links = \App\Link::query()->where("show_menu", 1)->where("parent_id", 0)->get();
                 ?>
                                                     <li class="nav-item">
                                                         <a href="{{url('/account')}}" class="nav-link nav-toggle">
@@ -505,68 +506,71 @@
                                                             <span class="title">واجهة الجمهور</span>
                                                         </a>
                                                     </li>
-
                 @foreach($links as $link)
                     <?php
                     /*$sublinks = \DB::table("link")->
                         whereRaw('id in (select link_id from admin_link where admin_id=?)',$adminId)->where("parent_id",$link->id)->get();*/
 
-                    $sublinks = Auth::user()->account->links->where("show_menu", 1)->where("parent_id", $link->id);
+                    $sublinks = \App\Link::query()->where("show_menu", 1)->where("parent_id", $link->id)->get();
 
                     $sub_sublinks_error =\App\Link::where("parent_id", $link->id);
 
                     ?>
-                    <li class="nav-item  {{ strstr("/".Route::getFacadeRoot()->current()->uri(),$sub_sublinks_error->first()->url)?
-                                            "open":'' }} ">
-                        <a href="{{$link->url}}" class="nav-link nav-toggle">
-                            <i class="{{$link->icon}}"></i>
-                            <span class="title">{{$link->title}}</span>
-                            <span class="arrow"></span>
-                        </a>
+                    @if(check_permission($link->title))
+                        <li class="nav-item  {{ strstr("/".Route::getFacadeRoot()->current()->uri(),$sub_sublinks_error->first()->url)?
+                                                "open":'' }} ">
+                            <a href="{{$link->url}}" class="nav-link nav-toggle">
+                                <i class="{{$link->icon}}"></i>
+                                <span class="title">{{$link->title}}</span>
+                                <span class="arrow"></span>
+                            </a>
 
-                        <ul class="sub-menu" {{ strstr("/".Route::getFacadeRoot()->current()->uri(),$sub_sublinks_error->first()->url)?"style=display:block;":'' }}>
-                            @foreach($sublinks as $sublink)
-                                @if($sublink->title != 'الرد على الشكاوى' && $sublink->title != 'ادارة الشكاوى')
-                                    <li class="nav-item  ">
-                                        <a href="{{$sublink->url}}"
-                                           @if($sublink->title == 'اضافة شكوى') target="_blank" @endif
-                                           class="nav-link ">
-                                            <span class="title">{{$sublink->title}}</span>
-                                        </a>
-                                    </li>
+                            <ul class="sub-menu" {{ strstr("/".Route::getFacadeRoot()->current()->uri(),$sub_sublinks_error->first()->url)?"style=display:block;":'' }}>
+                                @foreach($sublinks as $sublink)
+                                    @if(check_permission($sublink->title))
+                                        @if($sublink->title != 'الرد على الشكاوى' && $sublink->title != 'ادارة الشكاوى')
+                                            <li class="nav-item  ">
+                                                <a href="{{$sublink->url}}"
+                                                   @if($sublink->title == 'اضافة شكوى') target="_blank" @endif
+                                                   class="nav-link ">
+                                                    <span class="title">{{$sublink->title}}</span>
+                                                </a>
+                                            </li>
 
-                                    @if($sublink->id == 9 )
-                                        <?php
-                                        $spcial =\App\Link::where("id", 11)->first();
-                                        ?>
-                                        <li class="nav-item  ">
-                                            <a href="{{$spcial->url}}"
-                                               @if($spcial->title == 'اضافة شكوى') target="_blank" @endif
-                                               class="nav-link ">
-                                                <span class="title">{{$spcial->title}}</span>
-                                            </a>
-                                        </li>
+                                            @if($sublink->id == 9 )
+                                                <?php
+                                                $spcial =\App\Link::where("id", 11)->first();
+                                                ?>
+                                                <li class="nav-item  ">
+                                                    <a href="{{$spcial->url}}"
+                                                       @if($spcial->title == 'اضافة شكوى') target="_blank" @endif
+                                                       class="nav-link ">
+                                                        <span class="title">{{$spcial->title}}</span>
+                                                    </a>
+                                                </li>
+                                            @endif
+
+                                            @if($sublink->id == 13 )
+                                                <?php
+                                                $spcial =\App\Link::where("id", 41)->first();
+                                                ?>
+                                                <li class="nav-item  ">
+                                                    <a href="{{$spcial->url}}"
+                                                       class="nav-link ">
+                                                        <span class="title">{{$spcial->title}}</span>
+                                                    </a>
+                                                </li>
+                                            @endif
+
+
+
+                                        @endif
                                     @endif
+                                @endforeach
+                            </ul>
 
-                                    @if($sublink->id == 13 )
-                                        <?php
-                                        $spcial =\App\Link::where("id", 41)->first();
-                                        ?>
-                                        <li class="nav-item  ">
-                                            <a href="{{$spcial->url}}"
-                                               class="nav-link ">
-                                                <span class="title">{{$spcial->title}}</span>
-                                            </a>
-                                        </li>
-                                    @endif
-
-
-
-                                @endif
-                            @endforeach
-                        </ul>
-
-                    </li>
+                        </li>
+                    @endif
                 @endforeach
             </ul>
             <!-- END SIDEBAR MENU -->

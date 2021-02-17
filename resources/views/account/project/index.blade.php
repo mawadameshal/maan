@@ -7,7 +7,7 @@
     <div class="row">
                 <div class="col-md-9"><h4>هذه الواجهة مخصصة للتحكم في إدارة مشاريع المركز </h4></div>
                 <div class="col-md-2">
- 		@if(Auth::user()->account->links->contains(\App\Link::where('title','=','تعديل مشروع')->first()->id))
+ 		@if(check_permission('تعديل مشروع'))
                 <div class="col-sm-2" style="margin-left: 0px">
                     <a class="btn btn-success" href="/account/project/create">
                         <span class="glyphicon glyphicon-plus"></span>
@@ -201,7 +201,7 @@
 {{--                                    <i class="glyphicon glyphicon-eye-open"></i>--}}
 {{--                                    </button>--}}
 {{--                                </form>--}}
-                            @if(Auth::user()->account->links->contains(\App\Link::where('title','=','تعديل مشروع')->first()->id))
+                            @if(check_permission('تعديل مشروع'))
                                 @if($a->id !=1)
                                     <a class="btn btn-xs btn-primary" title="تعديل"
                                        href="/account/project/{{$a->id}}/edit"><i

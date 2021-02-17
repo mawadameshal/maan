@@ -96,15 +96,15 @@
                             {{-- <a class="btn btn-xs btn-info" href="/account/account/formtoaccount/{{$a->id}}">ردوده</a> --}}
                             <a class="btn btn-xs btn-info"
                                href="/account/account/select-project/{{$a->id}}">المشاريع</a>
-                            @if(Auth::user()->account->links->contains(\App\Link::where('title','=','تعديل حسابات')->first()->id))
-                                <a class="btn btn-xs btn-info" title="الصلاحيات"
-                                   href="/account/account/permission/{{$a->id}}"><i
-                                        class="fa fa-lock"></i></a>
+                            @if(check_permission('تعديل حسابات'))
+{{--                                <a class="btn btn-xs btn-info" title="الصلاحيات"--}}
+{{--                                   href="/account/account/permission/{{$a->id}}"><i--}}
+{{--                                        class="fa fa-lock"></i></a>--}}
                                 <a class="btn btn-xs btn-primary" title="تعديل" href="/account/account/{{$a->id}}/edit"><i
                                         class="fa fa-edit"></i></a>
 
 {{--                                @if($a->projects->toArray()==null && $a->id !=1 )--}}
-                                @if(Auth::user()->account->links->contains(\App\Link::where('title','=','حذف حسابات')->first()->id))
+                                @if(check_permission('حذف حسابات'))
                                     <a class="btn btn-xs Confirm btn-danger" title="يمكن حذفه لأنه غير عامل في أي مشروع"
                                        href="/account/account/delete/{{$a->id}}"><i
                                             class="fa fa-trash"></i></a>

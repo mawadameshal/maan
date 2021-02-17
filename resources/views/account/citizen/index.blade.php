@@ -8,7 +8,7 @@
           <h4>هذه الواجهة مخصصة للتحكم في إدارة مستفيدي مشاريع المركز</h4><br>
         </div>
 
-        @if(Auth::user()->account->links->contains(\App\Link::where('title','=','تعديل مواطن')->first()->id))
+        @if(check_permission('تعديل مواطن'))
             <div class="col-sm-2">
                 <a class="btn btn-success" style="width:150px;" href="/account/citizen/create"><span class="glyphicon glyphicon-plus"     style="margin-left: 5px;" aria-hidden="true"></span>إضافة مستفيد جديد</a>
             </div>
@@ -155,7 +155,7 @@
 
                         <a class="btn btn-xs btn-success" href="/account/citizen/formincitizen/{{$a->id}}">الاقتراحات/الشكاوى</a>
 
-                        @if(Auth::user()->account->links->contains(\App\Link::where('title','=','تعديل مواطن')->first()->id))
+                        @if(check_permission('تعديل مواطن'))
 
 {{--                            <a class="btn btn-xs @if($a->projects->first()) btn-info  @else btn-danger @endif"--}}
 {{--                               @if(!$a->projects->first()) title="المواطن غير مستفيد من أي مشروع" @endif--}}

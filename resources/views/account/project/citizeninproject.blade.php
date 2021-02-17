@@ -14,7 +14,7 @@
     @endif
     <div class="row">
         <div class="col-sm-12">
-            @if(Auth::user()->account->links->contains(\App\Link::where('title','=','تعديل مواطن')->first()->id))
+            @if(check_permission('تعديل مواطن'))
                 <form action="{{ route('save-citizen-data-project', $item->id) }}" method="POST" enctype="multipart/form-data"
                       id="dataListForm" style="padding-top: 20px;border-top: 1px solid #e2e2e2;">
                     @csrf
@@ -120,12 +120,12 @@
                             <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center;" class="text-left" dir="ltr">{{$a->mobile2}}</td>
                             <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center;" class="text-left" dir="ltr">{{$item->name}}</td>
                             <td style="text-align: center !important;">
-                                @if(Auth::user()->account->links->contains(\App\Link::where('title','=','تعديل مواطن')->first()->id))
-                                <a class="btn btn-xs btn-primary" title="تعديل" href="/account/citizen/{{$a->id}}/edit"><i
-                                            class="fa fa-edit"></i></a>
-                                <a class="btn btn-xs btn-info"
-                                   href="/account/citizen/select-project/{{$a->id}}">المشاريع</a>
-                                    @endif
+                                @if(check_permission('تعديل مواطن'))
+                                    <a class="btn btn-xs btn-primary" title="تعديل" href="/account/citizen/{{$a->id}}/edit"><i
+                                                class="fa fa-edit"></i></a>
+                                    <a class="btn btn-xs btn-info"
+                                       href="/account/citizen/select-project/{{$a->id}}">المشاريع</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

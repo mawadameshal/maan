@@ -61,12 +61,10 @@ Route::post('/account/restpassord','AuthRestController@sendResetLinkEmail');
 
 //ادارة الحسابات
 //
-Route::get('/account/account/permission/{id}','Account\AccountController@permission');
 Route::get('/account/account/profile/{id}','Account\AccountController@profile');
 Route::patch('/account/account/profileup/{id}','Account\AccountController@profileup');
 Route::resource("/account/account","Account\AccountController");
 Route::get('/account/account/delete/{id}','Account\AccountController@destroy');
-Route::post('/account/account/permission-post/{id}','Account\AccountController@permissionPost');
 Route::get('/account/account/select-project/{id}','Account\AccountController@selectproject');
 Route::post('/account/account/select-project-post/{id}','Account\AccountController@selectprojectPost');
 //Route::get('/account/account/formtoaccount/{id}','Account\AccountController@formtoaccount');
@@ -120,6 +118,8 @@ Route::get('/account/category/delete/{id}','Account\CategoryController@destroy')
 Route::post('/account/category/update/{id}','Account\CategoryController@update');
 
 //ادارة الدوائر
+Route::get('/account/circle/permission/{id}','Account\CircleController@permission');
+Route::post('/account/circle/permission-post/{id}','Account\CircleController@permissionPost');
 Route::resource("/account/circle","Account\CircleController");
 Route::get('/account/circle/delete/{id}','Account\CircleController@destroy');
 Route::get('/account/circle/select-category/{id}','Account\CircleController@selectcategory');

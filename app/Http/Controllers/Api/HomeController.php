@@ -270,7 +270,8 @@ class HomeController extends Controller {
 
 			$users_ids = Account::find($accouts_ids)->pluck('user_id');
 			for ($i = 0; $i < count($users_ids); $i++) {
-				if (User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id)) {
+//				if (User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id)) {
+				if (check_permission_with_user_id('الإشعارات', $users_ids[$i])) {
 					NotificationController::insert(['user_id' => $users_ids[$i], 'type' => 'مواطن', 'title' => 'تم إضافة نموذج جديد', 'link' => "/citizen/form/show/" . Form::find($form_id)->citizen->id_number . "/$form_id"]);
 					NotificationController::insert(['user_id' => $users_ids[$i], 'type' => 'مواطن', 'title' => 'تم إضافة نموذج جديد', 'link' => "/citizen/form/show/" . Form::find($form_id)->citizen->id_number . "/$form_id"]);
 				}

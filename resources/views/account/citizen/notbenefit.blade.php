@@ -103,7 +103,7 @@
 
                         <a class="btn btn-xs btn-success" href="/account/citizen/formincitizen/{{$a->id}}">الاقتراحات/الشكاوى</a>
 
-                        @if(Auth::user()->account->links->contains(\App\Link::where('title','=','تعديل مواطن')->first()->id))
+                        @if(check_permission('تعديل مواطن'))
                             <a class="btn btn-xs btn-primary" title="تعديل" href="/account/citizen/{{$a->id}}/edit"><i
                                         class="fa fa-edit"></i></a>
                             @if($a->add_byself=="1" && $a->projects->toArray()==null)

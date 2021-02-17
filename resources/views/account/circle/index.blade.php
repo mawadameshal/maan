@@ -56,9 +56,12 @@
                             <a class="btn btn-xs btn-info" href=""> الموظفين</a>
 
                             <a class="btn btn-xs btn-info" href="/account/circle/select-category/{{$a->id}}"> فئات الشكاوى والاقتراحات</a>
-                            @if(Auth::user()->account->links->contains(\App\Link::where('title','=','تعديل مستوى إداري')->first()->id) )
+                            @if(check_permission('تعديل مستوى إداري'))
                                 <a class="btn btn-xs btn-primary" title="تعديل" href="/account/circle/{{$a->id}}/edit"><i
                                             class="fa fa-edit"></i></a>
+                                <a class="btn btn-xs btn-info" title="الصلاحيات"
+                                   href="/account/circle/permission/{{$a->id}}"><i
+                                        class="fa fa-lock"></i></a>
                                 @if($a->id != 1 && $a->category->toArray() == null)
                                     <a class="btn btn-xs Confirm btn-danger" title="حذف" href="/account/circle/delete/{{$a->id}}"><i
                                                 class="fa fa-trash"></i></a>

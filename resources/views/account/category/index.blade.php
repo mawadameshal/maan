@@ -91,7 +91,7 @@
                             <td style="text-align:center;word-break: normal;">
                                 <a class="btn btn-xs btn-danger" href="/account/category/showcircle/{{$a->id}}">
                                         المستويات الإدارية</a>
-                                @if(Auth::user()->account->links->contains(\App\Link::where('title','=','تعديل فئة')->first()->id))
+                                @if(check_permission('تعديل فئة'))
                                     <a class="btn btn-xs btn-primary" title="تعديل" href="/account/category/{{$a->id}}/edit"><i
                                                 class="fa fa-edit"></i></a>
                                     @if($a->id > 12)

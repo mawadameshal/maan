@@ -309,9 +309,10 @@ class CitizenController extends BaseController
 
         $item = Citizen::find($id);
         if ($item == NULL ||
-            !(Auth::user()->account->links
-                ->contains(\App\Link::where('title', '=', 'تعديل مواطن')
-                    ->first()->id))
+            !check_permission('تعديل مواطن')
+//            !(Auth::user()->account->links
+//                ->contains(\App\Link::where('title', '=', 'تعديل مواطن')
+//                    ->first()->id))
         ) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
             return redirect("/account/citizen");
@@ -665,7 +666,8 @@ class CitizenController extends BaseController
 
     public function import(Request $request)
     {
-        if (Auth::user()->account->links->contains(\App\Link::where('title', '=', 'تعديل مواطن')->first()->id)) {
+//        if (Auth::user()->account->links->contains(\App\Link::where('title', '=', 'تعديل مواطن')->first()->id)) {
+        if (check_permission('تعديل مواطن')) {
             $testeroor = $this->validate($request, [
                 'data_file' => 'mimes:xlsx,xls',
             ]);
@@ -784,7 +786,8 @@ class CitizenController extends BaseController
 
     public function selectproject($id)
     {
-        if (Auth::user()->account->links->contains(\App\Link::where('title', '=', 'تعديل مواطن')->first()->id)) {
+//        if (Auth::user()->account->links->contains(\App\Link::where('title', '=', 'تعديل مواطن')->first()->id)) {
+        if (check_permission('تعديل مواطن')) {
             $item = Citizen::find($id);
             if ($item == NULL) {
                 Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
