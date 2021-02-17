@@ -13,6 +13,10 @@ class Circle extends Model
     public function Account(){
         return $this->hasMany('App\Account');
     }
+    public function links()
+    {
+        return $this->belongsToMany('App\Link');
+    }
     public function category()
     {
         return $this->belongsToMany('App\Category','circle_categorie');

@@ -16,11 +16,6 @@ class Account extends Model
     function user(){
         return $this->hasOne('App\User','id','user_id');
     }
-
-    public function links()
-    {
-        return $this->belongsToMany('App\Link');
-    }
     public function projects()
     {
         return $this->belongsToMany('App\Project');

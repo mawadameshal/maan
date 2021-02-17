@@ -249,10 +249,17 @@ class FormController extends Controller {
 
 			$users_ids = Account::find($accouts_ids)->pluck('user_id');
 
+
+            $type="مواطن";
+            if (auth()->user()) {
+                $request['account_id'] = auth()->user()->account->id;
+                $type = "موظف";
+            }
 			for ($i = 0; $i < count($users_ids); $i++) {
 
 
-						User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id) ;
+//						User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id) ;
+                if (check_permission_with_user_id('الإشعارات', $users_ids[$i]))
 						NotificationController::insert(['user_id' => $users_ids[$i], 'type' => $type, 'form_id' => $theform->id ,'title' => 'تذكير نموذج عالق للتأخير', 'link' => "/citizen/form/show/" . $theform->citizen->id_number . "/$theform->id"]);
 
 		}}
@@ -318,8 +325,9 @@ class FormController extends Controller {
 
 			for ($i = 0; $i < count($users_ids); $i++) {
 
-                User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id) ;
-                NotificationController::insert(['user_id' => $users_ids[$i], 'type' => $type,'form_id' => $theform->id, 'title' => 'لديك اقتراح/ شكوى جديدة بحاجة لمعالجة', 'link' => "/citizen/form/show/" . Form::find($form_id)->citizen->id_number . "/$form_id"]);
+//                User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id) ;
+                if (check_permission_with_user_id('الإشعارات', $users_ids[$i]))
+                    NotificationController::insert(['user_id' => $users_ids[$i], 'type' => $type,'form_id' => $theform->id, 'title' => 'لديك اقتراح/ شكوى جديدة بحاجة لمعالجة', 'link' => "/citizen/form/show/" . Form::find($form_id)->citizen->id_number . "/$form_id"]);
 
 
 
@@ -519,8 +527,9 @@ class FormController extends Controller {
 
 			for ($i = 0; $i < count($users_ids); $i++) {
 				if($circle_ids[$i] == 2){
-					User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id);
-					NotificationController::insert(['user_id' => $users_ids[$i], 'type' => $type ,'form_id' => $theform->id,'title' => 'تم اضافة متابعة على نموذج', 'link' => "/citizen/form/show/" . $theform->citizen->id_number . "/$theform->id"]);
+//					User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id);
+                    if (check_permission_with_user_id('الإشعارات', $users_ids[$i]))
+					    NotificationController::insert(['user_id' => $users_ids[$i], 'type' => $type ,'form_id' => $theform->id,'title' => 'تم اضافة متابعة على نموذج', 'link' => "/citizen/form/show/" . $theform->citizen->id_number . "/$theform->id"]);
 				}
 
 			}
@@ -561,8 +570,9 @@ class FormController extends Controller {
 			for ($i = 0; $i < count($users_ids); $i++) {
 
 				if($circle_ids[$i] == 4){
-				User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id);
-					NotificationController::insert(['user_id' => $users_ids[$i], 'type' => $type,'form_id' => $theform->id, 'title' => 'تم اضافة تقييم لنموذج', 'link' => "/citizen/form/show/" . $theform->citizen->id_number . "/$theform->id"]);
+//				User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id);
+                    if (check_permission_with_user_id('الإشعارات', $users_ids[$i]))
+					    NotificationController::insert(['user_id' => $users_ids[$i], 'type' => $type,'form_id' => $theform->id, 'title' => 'تم اضافة تقييم لنموذج', 'link' => "/citizen/form/show/" . $theform->citizen->id_number . "/$theform->id"]);
 				}
 
 			}

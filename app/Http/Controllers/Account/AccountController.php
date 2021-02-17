@@ -351,34 +351,6 @@ class AccountController extends BaseController
 
     }
 
-    public function permission($id)
-    {
-        $item = Account::find($id);
-        if ($item == NULL) {
-            Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
-            return redirect("/account/account");
-        }
-        return view("account.account.permission", compact("item"));
-    }
-
-    public function permissionPost(Request $request, $id)
-    {
-        $item = Account::find($id);
-        if ($item == NULL) {
-            Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
-            return redirect("/account/account");
-        }
-        \DB::table("account_link")->where("account_id", $id)->delete();
-        if ($request["permission"]) {
-            foreach ($request["permission"] as $link)
-                \DB::table("account_link")->insert(["account_id" => $id,
-                    "link_id" => $link]);
-        }
-        Session::flash("msg", "i:تمت عملية الحفظ بنجاح");
-        return redirect("/account/account/select-project/$id");
-        //return redirect("/account/account");
-    }
-
     public function formtoaccount($id, Request $request)
     {
         $read = $request["read"] ?? "";

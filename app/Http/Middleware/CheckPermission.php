@@ -49,8 +49,9 @@ class CheckPermission
 
             //معناه انه الرابط عليه صلاحيات
             if ($link != NULL) {
-                $haveAdminThisLink = $account->links->contains($link->id);
-                if (!$haveAdminThisLink) {
+//                $haveAdminThisLink = $account->links->contains($link->id);
+//                if (!$haveAdminThisLink) {
+                if (!check_permission_by_id($link->id)) {
                     return redirect('/account/home/noaccess');
                 }
             }
