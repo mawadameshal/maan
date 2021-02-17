@@ -22,160 +22,156 @@
             @csrf
             <div class="form-group row">
 
-                <div class="col-sm-5">
+                <div class="col-sm-6">
                     <ul class="list-unstyled">
                         <?php $i = 0?>
                         @foreach($items as $account)
 
-
                             <li class="row">
-                                <label class="col-sm-5">
+                                <input id='testNameHidden' type='hidden' value='0' name='accounts[{{$i}}]' checked>
+                                <input style="margin-left: 20px;margin-right: 20px;"
+                                       {{$item->accounts->contains($account->id)?'checked':''}} type="checkbox"
+                                            name="accounts[{{$i}}]" value="{{$account->id}}"/>
+                                <label><b>{{$account->full_name}}</b> ({{$account->circle->name}})</label>
+{{--                                <div class="col-sm-5">--}}
+{{--                                        <select class="form-control" style="width: 87% ;display: inline" id="rates" name="rates[]" >--}}
+{{--                                            @if($item->account_projects->where('account_id','=',$account->id)->count()>=1)--}}
+{{--                                                <option value="{{$item->account_projects->where('account_id','=',$account->id)->first()->rate}}">--}}
+{{--                                                    @if($item->account_projects->where('account_id','=',$account->id)->first()->rate==1)--}}
+{{--                                                        مدير--}}
+{{--                                                    @elseif($item->account_projects->where('account_id','=',$account->id)->first()->rate==2)--}}
+{{--                                                        مشرف--}}
+{{--                                                    @elseif($item->account_projects->where('account_id','=',$account->id)->first()->rate==3)--}}
+{{--                                                        منسق--}}
+{{--                                                    @elseif($item->account_projects->where('account_id','=',$account->id)->first()->rate==4)--}}
+{{--                                                        ممول--}}
+{{--                                                    @elseif($item->account_projects->where('account_id','=',$account->id)->first()->rate==5)--}}
+{{--                                                        لجنة--}}
+{{--                                                    @elseif($item->account_projects->where('account_id','=',$account->id)->first()->rate==6)--}}
+{{--                                                        موظف--}}
+{{--                                                    @endif--}}
+{{--                                                </option>--}}
+{{--                                            @endif--}}
+{{--                                            @if(!($item->account_projects->where('rate',1)->count()>=1))--}}
+{{--                                                <option value="1">مدير</option>--}}
+{{--                                            @endif--}}
+{{--                                            @if(!($item->account_projects->where('rate',2)->count()>=1))--}}
+{{--                                                <option value="2">مشرف</option>--}}
+{{--                                            @endif--}}
+{{--                                            @if(!($item->account_projects->where('rate',3)->count()>=1))--}}
+{{--                                                <option value="3">منسق</option>--}}
+{{--                                            @endif--}}
+{{--                                            @if(!($item->account_projects->where('rate',4)->count()>=1))--}}
+{{--                                                <option value="4">ممول</option>--}}
+{{--                                            @endif--}}
+{{--                                            @if(!($item->account_projects->where('rate',5)->count()>=5))--}}
+{{--                                                <option value="5">لجنة</option>--}}
+{{--                                            @endif--}}
+{{--                                            <option value="6">موظف</option>--}}
+{{--                                        </select>--}}
 
-                                    <input id='testNameHidden' type='hidden' value='0' name='accounts[{{$i}}]' checked>
-                                    <input
-                                            {{$item->accounts->contains($account->id)?'checked':''}} type="checkbox"
-                                            name="accounts[{{$i}}]"
-
-                                            value="{{$account->id}}"/>
-                                    <b>{{$account->full_name}}</b></label>
-                                <div class="col-sm-5">
-                                        <select class="form-control" style="width: 87% ;display: inline" id="rates" name="rates[]" >
-                                            @if($item->account_projects->where('account_id','=',$account->id)->count()>=1)
-                                                <option value="{{$item->account_projects->where('account_id','=',$account->id)->first()->rate}}">
-                                                    @if($item->account_projects->where('account_id','=',$account->id)->first()->rate==1)
-                                                        مدير
-                                                    @elseif($item->account_projects->where('account_id','=',$account->id)->first()->rate==2)
-                                                        مشرف
-                                                    @elseif($item->account_projects->where('account_id','=',$account->id)->first()->rate==3)
-                                                        منسق
-                                                    @elseif($item->account_projects->where('account_id','=',$account->id)->first()->rate==4)
-                                                        ممول
-                                                    @elseif($item->account_projects->where('account_id','=',$account->id)->first()->rate==5)
-                                                        لجنة
-                                                    @elseif($item->account_projects->where('account_id','=',$account->id)->first()->rate==6)
-                                                        موظف
-                                                    @endif
-                                                </option>
-                                            @endif
-                                            @if(!($item->account_projects->where('rate',1)->count()>=1))
-                                                <option value="1">مدير</option>
-                                            @endif
-                                            @if(!($item->account_projects->where('rate',2)->count()>=1))
-                                                <option value="2">مشرف</option>
-                                            @endif
-                                            @if(!($item->account_projects->where('rate',3)->count()>=1))
-                                                <option value="3">منسق</option>
-                                            @endif
-                                            @if(!($item->account_projects->where('rate',4)->count()>=1))
-                                                <option value="4">ممول</option>
-                                            @endif
-                                            @if(!($item->account_projects->where('rate',5)->count()>=5))
-                                                <option value="5">لجنة</option>
-                                            @endif
-                                            <option value="6">موظف</option>
-                                        </select>
-
-                                </div>
+{{--                                </div>--}}
                                 <br>
-                                @if($account->account_projects->where('project_id','=',$item->id)->first())
-                                    <ul style="margin-top: 29px " class=" list-unstyled">
-                                        <li>
-                                            <label><input type="hidden" name="to_add[{{$i}}]" value="0"><input
-                                                        {{($account->account_projects->where('project_id','=',$item->id)->first()->to_add)?"checked":""}}
-                                                        type="checkbox" name="to_add[{{$i}}]"
-                                                        value="1"/>
-                                                إضافة نماذج على المشروع</label>
+{{--                                @if($account->account_projects->where('project_id','=',$item->id)->first())--}}
+{{--                                    <ul style="margin-top: 29px " class=" list-unstyled">--}}
+{{--                                        <li>--}}
+{{--                                            <label><input type="hidden" name="to_add[{{$i}}]" value="0"><input--}}
+{{--                                                        {{($account->account_projects->where('project_id','=',$item->id)->first()->to_add)?"checked":""}}--}}
+{{--                                                        type="checkbox" name="to_add[{{$i}}]"--}}
+{{--                                                        value="1"/>--}}
+{{--                                                إضافة نماذج على المشروع</label>--}}
 
-                                        </li>
-                                        <li>
-                                            <label><input type="hidden" name="to_edit[{{$i}}]" value="0"><input
-                                                        {{($account->account_projects->where('project_id','=',$item->id)->first()->to_edit)?"checked":""}}
-                                                        type="checkbox" name="to_edit[{{$i}}]"
-                                                        value="1"/>
-                                                تعديل فئات غير مناسبة لنماذج المشروع</label>
+{{--                                        </li>--}}
+{{--                                        <li>--}}
+{{--                                            <label><input type="hidden" name="to_edit[{{$i}}]" value="0"><input--}}
+{{--                                                        {{($account->account_projects->where('project_id','=',$item->id)->first()->to_edit)?"checked":""}}--}}
+{{--                                                        type="checkbox" name="to_edit[{{$i}}]"--}}
+{{--                                                        value="1"/>--}}
+{{--                                                تعديل فئات غير مناسبة لنماذج المشروع</label>--}}
 
-                                        </li>
-                                        <li>
-                                            <label><input type="hidden" name="to_delete[{{$i}}]" value="0"><input
-                                                        {{($account->account_projects->where('project_id','=',$item->id)->first()->to_delete)?"checked":""}}
-                                                        type="checkbox" name="to_delete[{{$i}}]"
-                                                        value="1"/>
-                                                حذف نماذج المشروع</label>
+{{--                                        </li>--}}
+{{--                                        <li>--}}
+{{--                                            <label><input type="hidden" name="to_delete[{{$i}}]" value="0"><input--}}
+{{--                                                        {{($account->account_projects->where('project_id','=',$item->id)->first()->to_delete)?"checked":""}}--}}
+{{--                                                        type="checkbox" name="to_delete[{{$i}}]"--}}
+{{--                                                        value="1"/>--}}
+{{--                                                حذف نماذج المشروع</label>--}}
 
-                                        </li>
-                                        <li>
-                                            <label><input type="hidden" name="to_replay[{{$i}}]" value="0"><input
-                                                        {{($account->account_projects->where('project_id','=',$item->id)->first()->to_replay)?"checked":""}}
-                                                        type="checkbox" name="to_replay[{{$i}}]"
-                                                        value="1"/>
-                                                الرد على نماذج المشروع</label>
+{{--                                        </li>--}}
+{{--                                        <li>--}}
+{{--                                            <label><input type="hidden" name="to_replay[{{$i}}]" value="0"><input--}}
+{{--                                                        {{($account->account_projects->where('project_id','=',$item->id)->first()->to_replay)?"checked":""}}--}}
+{{--                                                        type="checkbox" name="to_replay[{{$i}}]"--}}
+{{--                                                        value="1"/>--}}
+{{--                                                الرد على نماذج المشروع</label>--}}
 
-                                        </li>
-                                        <li>
-                                            <label><input type="hidden" name="to_stop[{{$i}}]" value="0"><input
-                                                        {{($account->account_projects->where('project_id','=',$item->id)->first()->to_stop)?"checked":""}}
-                                                        type="checkbox" name="to_stop[{{$i}}]"
-                                                        value="1"/>
-                                                ايقاف نماذج المشروع</label>
+{{--                                        </li>--}}
+{{--                                        <li>--}}
+{{--                                            <label><input type="hidden" name="to_stop[{{$i}}]" value="0"><input--}}
+{{--                                                        {{($account->account_projects->where('project_id','=',$item->id)->first()->to_stop)?"checked":""}}--}}
+{{--                                                        type="checkbox" name="to_stop[{{$i}}]"--}}
+{{--                                                        value="1"/>--}}
+{{--                                                ايقاف نماذج المشروع</label>--}}
 
-                                        </li>
-                                        <li>
-                                            <label><input type="hidden" name="to_notify[{{$i}}]" value="0"><input
-                                                        {{($account->account_projects->where('project_id','=',$item->id)->first()->to_notify)?"checked":""}}
-                                                        type="checkbox" name="to_notify[{{$i}}]"
-                                                        value="1"/>
-                                                اشعارا بأحداث نماذج المشروع</label>
+{{--                                        </li>--}}
+{{--                                        <li>--}}
+{{--                                            <label><input type="hidden" name="to_notify[{{$i}}]" value="0"><input--}}
+{{--                                                        {{($account->account_projects->where('project_id','=',$item->id)->first()->to_notify)?"checked":""}}--}}
+{{--                                                        type="checkbox" name="to_notify[{{$i}}]"--}}
+{{--                                                        value="1"/>--}}
+{{--                                                اشعارا بأحداث نماذج المشروع</label>--}}
 
-                                        </li>
-                                    </ul>
-                                @else
-                                    <ul style="margin-top: 29px " class=" list-unstyled">
-                                        <li>
-                                            <label><input type="hidden" name="to_add[{{$i}}]" value="0"><input
-                                                        type="checkbox" name="to_add[{{$i}}]"
-                                                        value="1"/>
-                                                إضافة نماذج على المشروع</label>
+{{--                                        </li>--}}
+{{--                                    </ul>--}}
+{{--                                @else--}}
+{{--                                    <ul style="margin-top: 29px " class=" list-unstyled">--}}
+{{--                                        <li>--}}
+{{--                                            <label><input type="hidden" name="to_add[{{$i}}]" value="0"><input--}}
+{{--                                                        type="checkbox" name="to_add[{{$i}}]"--}}
+{{--                                                        value="1"/>--}}
+{{--                                                إضافة نماذج على المشروع</label>--}}
 
-                                        </li>
-                                        <li>
-                                            <label><input type="hidden" name="to_edit[{{$i}}]" value="0"><input
-                                                        type="checkbox" name="to_edit[{{$i}}]"
-                                                        value="1"/>
-                                                تعديل فئات غير مناسبة لنماذج المشروع</label>
+{{--                                        </li>--}}
+{{--                                        <li>--}}
+{{--                                            <label><input type="hidden" name="to_edit[{{$i}}]" value="0"><input--}}
+{{--                                                        type="checkbox" name="to_edit[{{$i}}]"--}}
+{{--                                                        value="1"/>--}}
+{{--                                                تعديل فئات غير مناسبة لنماذج المشروع</label>--}}
 
-                                        </li>
-                                        <li>
-                                            <label><input type="hidden" name="to_delete[{{$i}}]" value="0"><input
-                                                        type="checkbox" name="to_delete[{{$i}}]"
-                                                        value="1"/>
-                                                حذف نماذج المشروع</label>
+{{--                                        </li>--}}
+{{--                                        <li>--}}
+{{--                                            <label><input type="hidden" name="to_delete[{{$i}}]" value="0"><input--}}
+{{--                                                        type="checkbox" name="to_delete[{{$i}}]"--}}
+{{--                                                        value="1"/>--}}
+{{--                                                حذف نماذج المشروع</label>--}}
 
-                                        </li>
-                                        <li>
-                                            <label><input type="hidden" name="to_replay[{{$i}}]" value="0"><input
-                                                        type="checkbox" name="to_replay[{{$i}}]"
-                                                        value="1"/>
-                                                الرد على نماذج المشروع</label>
+{{--                                        </li>--}}
+{{--                                        <li>--}}
+{{--                                            <label><input type="hidden" name="to_replay[{{$i}}]" value="0"><input--}}
+{{--                                                        type="checkbox" name="to_replay[{{$i}}]"--}}
+{{--                                                        value="1"/>--}}
+{{--                                                الرد على نماذج المشروع</label>--}}
 
-                                        </li>
-                                        <li>
-                                            <label><input type="hidden" name="to_stop[{{$i}}]" value="0"><input
-                                                        type="checkbox" name="to_stop[{{$i}}]"
-                                                        value="1"/>
-                                                ايقاف نماذج المشروع</label>
+{{--                                        </li>--}}
+{{--                                        <li>--}}
+{{--                                            <label><input type="hidden" name="to_stop[{{$i}}]" value="0"><input--}}
+{{--                                                        type="checkbox" name="to_stop[{{$i}}]"--}}
+{{--                                                        value="1"/>--}}
+{{--                                                ايقاف نماذج المشروع</label>--}}
 
-                                        </li>
-                                        <li>
-                                            <label><input type="hidden" name="to_notify[{{$i}}]" value="0"><input
-                                                        type="checkbox" name="to_notify[{{$i}}]"
-                                                        value="1"/>
-                                                اشعارا بأحداث نماذج المشروع</label>
+{{--                                        </li>--}}
+{{--                                        <li>--}}
+{{--                                            <label><input type="hidden" name="to_notify[{{$i}}]" value="0"><input--}}
+{{--                                                        type="checkbox" name="to_notify[{{$i}}]"--}}
+{{--                                                        value="1"/>--}}
+{{--                                                اشعارا بأحداث نماذج المشروع</label>--}}
 
-                                        </li>
-                                    </ul>
+{{--                                        </li>--}}
+{{--                                    </ul>--}}
 
-                                @endif
-                            </li><br>
+{{--                                @endif--}}
+                            </li>
+                                <br>
                             <?php $i++?>
                         @endforeach
                     </ul>

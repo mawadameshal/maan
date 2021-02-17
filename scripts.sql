@@ -14,3 +14,6 @@ INSERT INTO `links` (`id`, `title`, `url`, `icon`, `show_menu`, `parent_id`, `cr
 UPDATE `links` SET `url` = '/account/events', `created_at` = NULL, `updated_at` = NULL WHERE `links`.`id` = 53;
 
 UPDATE `links` SET `parent_id` = '6' WHERE `links`.`id` = 51;
+
+
+INSERT INTO `links` (`id`, `title`, `url`, `icon`, `show_menu`, `parent_id`, `created_at`, `updated_at`) VALUES (NULL, 'الملحقات', '/account/Appendix', '', '1', '9', '2019-12-30 00:00:00', '2019-12-30 00:00:00');

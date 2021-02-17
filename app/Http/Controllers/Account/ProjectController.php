@@ -782,43 +782,32 @@ class ProjectController extends BaseController
             for ($i = 0; $i < count($request["accounts"]); $i++) {
                 if ($request["accounts"][$i] == 0)
                     continue;
-                if (!$request["rates"][$i]) {
-                    Session::flash("msg", "e:يجب ادخال دورا للموظف");
-                    return redirect("/account/project/stuffinproject");
-                } else {
 
-                    $test = \DB::table("account_project")->insertGetID(["project_id" => $id,
-                        "account_id" => $request["accounts"][$i]
-                        , "rate" => $request["rates"][$i]
-                        , "to_delete" => $request["to_delete"][$i]
-                        , "to_add" => $request["to_add"][$i]
-                        , "to_edit" => $request["to_edit"][$i]
-                        , "to_replay" => $request["to_replay"][$i]
-                        , "to_stop" => $request["to_stop"][$i]
-                        , "to_notify" => $request["to_notify"][$i]]);
 
-                    /**************اضافتهم بالبروجكت*************/
+                $test = \DB::table("account_project")->insertGetID(["project_id" => $id,
+                    "account_id" => $request["accounts"][$i]
+                ]);
 
-                    $ratename="";
-                    $item = Account::find($request["accounts"][$i]);
-                    if ($request["rates"][$i]==1) {
-                        $ratename='manager';
-                    }
-                    elseif ($request["rates"][$i]==2) {
-                        $ratename='supervisor';
-                    }
-                    elseif ($request["rates"][$i]==3) {
-                        $ratename='coordinator';
-                    }
-                    elseif ($request["rates"][$i]==4) {
-                        $ratename='support';
-                    }
-                    if($ratename!="")
-                    Project::find($id)->update([
-                        ''.$ratename.'' => $item->full_name]);
+                /**************اضافتهم بالبروجكت*************/
+
+                $ratename="";
+                $item = Account::find($request["accounts"][$i]);
+                if ($request["rates"][$i]==1) {
+                    $ratename='manager';
                 }
+                elseif ($request["rates"][$i]==2) {
+                    $ratename='supervisor';
+                }
+                elseif ($request["rates"][$i]==3) {
+                    $ratename='coordinator';
+                }
+                elseif ($request["rates"][$i]==4) {
+                    $ratename='support';
+                }
+                if($ratename!="")
+                Project::find($id)->update([
+                    ''.$ratename.'' => $item->full_name]);
             }
-
         }
         Session::flash("msg", "i:تمت عملية الحفظ بنجاح");
         return redirect("/account/project");

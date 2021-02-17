@@ -60,7 +60,15 @@ Route::post('/account/events', 'Account\EventController@addEvent')->name('events
 Route::get('/account/events/edit/{id}', 'Account\EventController@edit')->name('events.edit');
 Route::post('/account/events/update/{id}', 'Account\EventController@update')->name('events.update');
 Route::get('/account/events/delete/{id}', 'Account\EventController@destory')->name('events.destory');
+//الملحقات
 
+//Route::resource("/account/appendix","Account\AppendixController");
+Route::get('/account/appendix', 'Account\AppendixController@index');
+Route::post('/account/appendix', 'Account\AppendixController@store');
+Route::get('/account/appendix/edit/{id}', 'Account\AppendixController@edit')->name('appendix.edit');
+Route::post('/account/appendix/update/{id}', 'Account\AppendixController@update');
+Route::get('/account/appendix/delete/{id}', 'Account\AppendixController@destory');
+Route::get('/account/appendix/show/{id}','Account\AppendixController@showfiles');
 
 Route::post('/back','Account\HomeController@backup');
 ///لوجين ونسيت

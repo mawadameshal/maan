@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEventsTable extends Migration
+class CreateAppendixesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,15 @@ class CreateEventsTable extends Migration
      */
     public function up()
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('appendixes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('event_name');
-            $table->text('start_date');
-            $table->text('end_date');
+            $table->string('appendix_name');
+            $table->string('appendix_describe');
+            $table->string('appendix_file');
             $table->timestamps();
         });
-
     }
-
+     
     /**
      * Reverse the migrations.
      *
@@ -30,6 +29,6 @@ class CreateEventsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('appendixes');
     }
 }

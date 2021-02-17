@@ -865,49 +865,36 @@ class AccountController extends BaseController
             for ($i = 0; $i < count($request["projects"]); $i++) {
                 if ($request["projects"][$i] == 0)
                     continue;
-                if (!$request["rates"][$i]) {
-                    Session::flash("msg", "e:يجب ادخال دورا للموظف");
-                    return redirect("/account/select-project");
-                } else {
 
-                    $test = \DB::table("account_project")->insertGetID(["account_id" => $id,
-                        "project_id" => $request["projects"][$i]
-                        , "rate" => $request["rates"][$i]
-                        , "to_delete" => $request["to_delete"][$i]
-                        , "to_add" => $request["to_add"][$i]
-                        , "to_edit" => $request["to_edit"][$i]
-                        , "to_replay" => $request["to_replay"][$i]
-                        , "to_stop" => $request["to_stop"][$i]
-                        , "to_notify" => $request["to_notify"][$i]
-                    ]);
+                $test = \DB::table("account_project")->insertGetID(["account_id" => $id,
+                    "project_id" => $request["projects"][$i]
+                ]);
 
-                    /**************اضافتهم بالبروجكت*************/
-                    $manager = "";
-                    $supervisor = "";
-                    $coordinator = "";
-                    $support = "";
-                    $item = Project::find($request["projects"][$i]);
-                    if ($item->account_projects->where('rate', '=', '1')->first()) {
-                        $manager = $item->account_projects->where('rate', '=', '1')->first()->account->full_name;
-                    }
-                    if ($item->account_projects->where('rate', '=', '2')->first()) {
-                        $supervisor = $item->account_projects->where('rate', '=', '2')->first()->account->full_name;
-                    }
-                    if ($item->account_projects->where('rate', '=', '3')->first()) {
-                        $coordinator = $item->account_projects->where('rate', '=', '3')->first()->account->full_name;
-                    }
-                    if ($item->account_projects->where('rate', '=', '4')->first()) {
-                        $support = $item->account_projects->where('rate', '=', '4')->first()->account->full_name;
-                    }
-                    $item->update([
-                        'manager' => $manager
-                        , 'supervisor' => $supervisor
-                        , 'coordinator' => $coordinator
-                        , 'support' => $support]);
-
+                /**************اضافتهم بالبروجكت*************/
+                $manager = "";
+                $supervisor = "";
+                $coordinator = "";
+                $support = "";
+                $item = Project::find($request["projects"][$i]);
+                if ($item->account_projects->where('rate', '=', '1')->first()) {
+                    $manager = $item->account_projects->where('rate', '=', '1')->first()->account->full_name;
                 }
-            }
+                if ($item->account_projects->where('rate', '=', '2')->first()) {
+                    $supervisor = $item->account_projects->where('rate', '=', '2')->first()->account->full_name;
+                }
+                if ($item->account_projects->where('rate', '=', '3')->first()) {
+                    $coordinator = $item->account_projects->where('rate', '=', '3')->first()->account->full_name;
+                }
+                if ($item->account_projects->where('rate', '=', '4')->first()) {
+                    $support = $item->account_projects->where('rate', '=', '4')->first()->account->full_name;
+                }
+                $item->update([
+                    'manager' => $manager
+                    , 'supervisor' => $supervisor
+                    , 'coordinator' => $coordinator
+                    , 'support' => $support]);
 
+            }
         }
         Session::flash("msg", "i:تمت عملية الحفظ بنجاح");
         return redirect("/account/account");
