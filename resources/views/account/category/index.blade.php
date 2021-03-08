@@ -79,8 +79,6 @@
                 </thead>
                 <tbody>
                     @foreach($items as $a)
-{{--					@if($a->id !=1 && $a->id !=2)--}}
-					@if($a->id !=1)
                         <tr>
                             <td style="word-break: normal;">{{$a->id}}</td>
                             <td style="word-break: normal;">{{$a->is_complaint == 1 ? $a->parentCategory->name  : $a->parentSuggest->name }}</td>
@@ -101,7 +99,6 @@
                                 @endif
                             </td>
                         </tr>
-					@endif
                     @endforeach
                 </tbody>
             </table>

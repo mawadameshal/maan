@@ -1,6 +1,6 @@
 @extends("layouts._citizen_layout")
 
-@section("title", "متابعة نموذج ")
+@section("title", "معالجة  نموذج ")
 
 @section('css')
     <style>
@@ -390,7 +390,6 @@
                                                 id="sel1" name="category_id">
                                             <option value="">اختر فئة الشكوى</option>
                                             @foreach($category as $cat)
-                                                @if($cat->id != 1 && $cat->id != 2)
                                                     @if($project_id>1)
                                                         @if($cat->benefic_show==0)
                                                             @continue
@@ -409,7 +408,6 @@
                                                                     @if(old("category_id")==$cat->id)selected @endif>{{$cat->name}}</option>
                                                         @endif
                                                     @endif
-                                                @endif
                                             @endforeach
                                         </select>
                                         {!! $errors->first('category_id', '<p class="help-block" style="color:red;">:message</p>') !!}
@@ -425,7 +423,6 @@
                                                 id="sel1" name="category_id">
                                             <option value=""> اختر فئة الاقتراح</option>
                                             @foreach($category as $cat)
-                                                @if($cat->id != 1 && $cat->id != 2)
                                                     @if($project_id>1)
                                                         @if($cat->benefic_show==0)
                                                             @continue
@@ -444,7 +441,6 @@
                                                                     @if(old("category_id")==$cat->id)selected @endif>{{$cat->name}}</option>
                                                         @endif
                                                     @endif
-                                                @endif
                                             @endforeach
                                         </select>
                                         {!! $errors->first('category_id', '<p class="help-block" style="color:red;">:message</p>') !!}
@@ -493,30 +489,7 @@
                             </div>
 
                             <br>
-                            <hr>
-                            @if($type == 1 && !auth()->user())
-                                <div class="form-group row">
-                                    <div class="col-sm-10">
-                                        <label for="show_data" style="text-align: justify;" class="col-form-label">هل
-                                            ترغب في مشاركة معلوماتك الأساسية (الاسم، رقم الهوية، معلومات التواصل) مع
-                                            الجهات المختصة بالنظر في شكواك داخل المركز مع العلم أنه سيتم التعامل مع
-                                            معلوماتك بسرية تامة وسوف يسهل على المركز الرجوع لك وإبلاغك بنتيجة معالجة
-                                            الشكوى؟</label>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <select
-                                            class="form-control {{($errors->first('show_data') ? " form-error" : "")}}"
-                                            id="show_data" name="show_data">
-                                            <option value="">اختر</option>
-                                            <option value="1">نعم</option>
-                                            <option value="0">لا</option>
 
-                                        </select>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <br><br>
                         </form>
                     </div>
                 </div>
@@ -558,16 +531,16 @@
     </script>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function(){
 
-            $('#submitBtn').on('click', function () {
+            $('#submitBtn').on('click',function(){
                 $('#form1').submit();
-                console.log("submitted 1");
+                console.log("submitted 11111");
 
-                setTimeout(function () {
+                setTimeout( function () {
                     $('#form2').submit();
-                    console.log("submitted 2");
-                }, 100);
+                    console.log("submitted 2222");
+                }, 200);
 
 
             });

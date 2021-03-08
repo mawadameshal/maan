@@ -20,7 +20,15 @@ class Form extends Model {
 	}
 
 	public function user_change_content() {
-		return $this->belongsTo('App\User');
+		return $this->belongsTo('App\Account');
+	}
+
+	public function user_recommendations_for_deleting() {
+		return $this->belongsTo('App\Account');
+	}
+
+	public function user_reprocessing_recommendations() {
+		return $this->belongsTo('App\Account');
 	}
 
 	public function sent_typee() {
@@ -38,6 +46,11 @@ class Form extends Model {
 	public function account() {
 		return $this->belongsTo('App\Account');
 	}
+
+	public function deleted_user() {
+        return $this->hasOne('App\User',  'id','deleted_by');
+
+    }
 
 	public function category() {
 		return $this->belongsTo('App\Category');

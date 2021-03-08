@@ -81,7 +81,7 @@
                             <div class="col-md-4">
                                 <div class="form-check">
 {{--                                    <input class="form-check-input" name="citizen_show" type="hidden" value="0">--}}
-                                    <input class="form-check-input" type="radio" id="citizen_show"
+                                    <input class="form-check-input" type="checkbox" id="citizen_show"
                                            name="citizen_show" value="citizen_show">
                                     <label class="form-check-label" for="citizen_show">
                                         غير مستفيد من مشاريع المركز
@@ -92,7 +92,7 @@
                             <div class="col-md-4">
                                 <div class="form-check">
                                     <input class="form-check-input" name="benefic_show" type="hidden" value="0">
-                                    <input class="form-check-input" type="radio" id="benefic_show"
+                                    <input class="form-check-input" type="checkbox" id="benefic_show"
                                            name="citizen_show" value="benefic_show">
                                     <label class="form-check-label" for="citizen_show">
 
@@ -122,7 +122,7 @@
                         <tr>
                             <th style="max-width: 100px;word-break: normal;">الفئة الرئيسية</th>
                             <th style="max-width: 100px;word-break: normal;">الفئة الفرعية</th>
-                            <th style="max-width: 100px;word-break: normal;">نوع الإجراء</th>
+                            <th colspan="2" style="max-width: 100px;word-break: normal;">نوع الإجراء</th>
                             @foreach($circles as $circle)
                                 <th style="max-width: 100px;word-break: normal;">{{$circle->name}}</th>
                             @endforeach
@@ -130,12 +130,17 @@
                         </thead>
                         <tbody>
                         <tr>
-                            <td  colspan="1" rowspan="5" scope="col" style="word-break: normal;" id="maincat"></td>
-                            <td  colspan="1" rowspan="5" scope="col" style="word-break: normal;" id="subcat"></td>
+                            <td  colspan="1" rowspan="6" scope="col" style="word-break: normal;" id="maincat"></td>
+                            <td  colspan="1" rowspan="6" scope="col" style="word-break: normal;" id="subcat"></td>
                         </tr>
                         @foreach($procedureTypes as $procedureType)
                             <tr>
-                                <td style="word-break: normal;" id="{{$procedureType->id}}">{{$procedureType->name}}</td>
+                                @if($procedureType->id != 2 && $procedureType->id != 3)
+                                    <td colspan="2" style="word-break: normal;" id="{{$procedureType->id}}">{{$procedureType->name}}</td>
+                                @else
+                                    <td  style="word-break: normal;">الجهات المختصة بمعالجة الشكوى</td>
+                                    <td  style="word-break: normal;" id="{{$procedureType->id}}">{{$procedureType->name}}</td>
+                                @endif
                                 @foreach($circles as $circle)
                                     <td style="text-align:center;max-width: 100px;word-break: normal;">
                                         <input type="checkbox" name="category_circle[]" value="{{$procedureType->id.'_'.$circle->id}}">
@@ -216,5 +221,23 @@
             });
         });
 
+    </script>
+
+    <script>
+        const table = document.querySelector('table');
+
+        let headerCell = null;
+
+        for (let row of table.rows) {
+            const firstCell = row.cells[0];
+
+            if (headerCell === null || firstCell.innerText !== headerCell.innerText) {
+                headerCell = firstCell;
+            } else {
+                headerCell.rowSpan++;
+                headerCell.style = "vertical-align: middle";
+                firstCell.remove();
+            }
+        }
     </script>
 @endsection

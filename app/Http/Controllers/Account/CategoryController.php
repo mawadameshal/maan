@@ -39,7 +39,7 @@ class CategoryController extends BaseController
     public function index(Request $request)
     {
 //        $items = auth()->user()->account->circle->category()->whereNotIN('categories.id',[1,2]);
-        $items = auth()->user()->account->circle->category()->whereNotIN('categories.id',[1]);
+        $items = auth()->user()->account->circle->category();
 
         if ($items == null) {
             session::flash('msg', 'w:نأسف لا يوجد بيانات لعرضها');
@@ -224,7 +224,7 @@ class CategoryController extends BaseController
         $CategoryCircles = CategoryCircles::where(['category'=>$id])->get();
 
 //        if($item == NULL || $item->id ==1  ||$item->id == 2){
-        if($item == NULL || $item->id == 1){
+        if($item == NULL){
             session::flash('msg','w:الرجاء التأكد من الرابط المطلوب');
             return redirect('/account/category');
         }else{
@@ -243,7 +243,7 @@ class CategoryController extends BaseController
         $CategoryCircles = CategoryCircles::where(['category'=>$id])->get();
 
 //        if($item == NULL || $item->id ==1  ||$item->id == 2){
-        if($item == NULL  ||$item->id == 1){
+        if($item == NULL){
             session::flash('msg','w:الرجاء التأكد من الرابط المطلوب');
             return redirect('/account/category');
         }else{
@@ -262,7 +262,7 @@ class CategoryController extends BaseController
         }
         $item = Category::find($id);
 //        if ($item == NULL || $item->id ==1  ||$item->id == 2) {
-        if ($item == NULL   ||$item->id == 1) {
+        if ($item == NULL) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
             return redirect("/account/category");
         }

@@ -61,6 +61,7 @@
         .datepicker{
             direction: rtl;
             padding-right: 15px;
+
         }
 
 
@@ -681,7 +682,7 @@
 </script>
 <script type="text/javascript">
     $('.datepicker').datepicker({
-        format: 'yyyy/mm/dd'
+        format: 'yyyy/mm/dd',
     });
 </script>
 <script src="https://js.pusher.com/4.3/pusher.min.js"></script>

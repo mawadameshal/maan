@@ -1,276 +1,216 @@
 @extends("layouts._account_layout")
-@section("title", "إرسال الرسائل النصية")
+@section("title", "تعريف الرسائل النصية (SMS)")
 @section("content")
-    <span id="mybody">
-        <div class="row">
-            <div class="col-md-12">
-                <h4>هذه الواجهة مخصصة للتحكم في إرسال الرسائل النصية (SMS) من خلال النظام </h4>
-            </div>
-        </div>
+    <div class="col-md-12">
+        <h4>هذه الواجهة مخصصة للتحكم في تعريف الرسائل النصية (SMS) في النظام.</h4>
+    </div>
 
+    <div class="col-sm-12">
         <br>
+        <button type="button" style="width:50px;margin-left: 10px;" class="btn btn-primary msg-btn">
+            <span class="icon-plus" aria-hidden="true"></span>
+        </button>
+        يمكنك تعريف الرسائل النصية التي يقوم النظام بإرسالها من خلال التالي:
+    </div>
 
-          <div class="row">
-              <div class="col-md-12" id="app">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            {{--  start first choice --}}
-                            <div class="col-md-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" name="citizen_show" type="hidden" value="0">
-                                    <input class="form-check-input" type="checkbox" id="citizen_show"
-                                           name="citizen_show" v-model="citizen_show">
-                                    <label class="form-check-label" for="citizen_show">
-                                        يمكنك تعريف الرسائل النصية التي يقوم النظام بإرسالها بشكل تلقائي أدناه:
-                                    </label>
-                                </div>
-                            </div>
-                             <form action="/account/message" method="post">
-                                 @csrf
-                                 <br><br>
-                                 <div class="row">
-                                     <div class="col-md-12"></div>
-                                     <div class="col-md-12">
-                                         <div v-if="citizen_show">
-                                             <table class="table table-bordered">
-
-                                                 <thead>
-                                                     <tr>
-                                                         <th style="width: 25%;">نوع الرسالة</th>
-                                                         <th style="width: 65%;">نص الرسالة</th>
-                                                     </tr>
-                                                 </thead>
-                                                 <tbody>
-                                                 @foreach($messagesType as $messageType)
-                                                     @if($messageType->id == 1 || $messageType->id == 2)
-                                                     <tr>
-                                                         <td>{{$messageType->name}}</td>
-                                                         <td>
-                                                             <input type="hidden" value="{{$messageType->id}}" name="update_id[]" />
-                                                             <input class="form-control" type="text" value="{{$messageType->text}}" name="update_text[]" />
-                                                         </td>
-                                                     </tr>
-                                                     @endif
-                                                 @endforeach
-                                                 </tbody>
-
-                                             </table>
-
-                                             <div class="row">
-                                                 <div class="col-md-4">
-                                                     <button class="btn btn-success" type="button" name="msg_show" onclick="$('#msg_show').show();">
-                                                     <span class="glyphicon glyphicon-plus"></span>  إضافة نوع رسالة جديد
-                                                 </button>
-                                                 </div>
-                                                 <div class="col-md-12"></div>
-
-                                                 <div class="form-group row">
-                                                     <div class="col-md-12">
-                                                     <br><br>
-                                                     <div style="display: none" id="msg_show">
-                                                         <div class="col-md-8">
-                                                             <label class="col-md-2 col-form-label">النوع</label>
-                                                             <input class="col-md-6 form-control" type="text" value="{{old('name')}}" name="name" id="name" style="width: 80%">
-                                                         </div>
-
-                                                         <div class="col-md-12">
-                                                             <br>
-                                                         </div>
-
-                                                         <div class="col-md-8">
-                                                             <label class="col-md-2 col-form-label">نص الرسالة</label>
-                                                             <input class="col-md-6 form-control" type="text" value="{{old('text')}}" name="text" id="text" style="width: 80%">
-                                                         </div>
-                                                     </div>
-                                                     </div>
-                                                 </div>
-                                             </div>
-
-                                             <div class="form-actions" style="text-align: left;">
-                                                 <input type="submit" class="btn btn-success" value="حفظ">
-                                                 <a type="button" href="/account/message" class="btn btn-light">إلغاء</a>
-                                             </div>
-                                             <hr>
-                                         </div>
-                                     </div>
-                                 </div>
-                             </form>
-                            {{--  end first choice --}}
-                            <div class="col-md-12"></div>
-                            <div class="col-md-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" name="benefic_show" type="hidden" value="0">
-                                    <input class="form-check-input" type="checkbox" id="benefic_show"
-                                           name="benefic_show" v-model="benefic_show">
-                                    <label class="form-check-label" for="benefic_show">
-يمكنك إرسال رسائل نصية بشكل يدوي من خلال:
-                                    </label>
-                                </div>
-                            </div>
-
-                            <br><br>
-                             <div class="row">
-                                 <div v-if="benefic_show">
-                                     <div class="col-md-12"></div>
-                                     <div class="col-md-6">
-                                         <br>
-                                         <div class="form-group">
-                                                <select id="message_type_id_selection" class="form-control" onchange="gettype()">
-                                                    <option value="" selected>حدد نوع الرسالة</option>
-                                                    @foreach($messagesType as $messageType)
-                                                        <option
-                                                            @if(request('messagetype_id')===''.$messageType->id)selected
-                                                            @endif
-                                                            value="{{$messageType->id}}">{{$messageType->name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                     </div>
-                                     <div class="col-md-12"></div>
-                                     <div class="col-md-12">
-                                        <div id="dataListPanel" class="panel panel-default" style="margin-top:15px;">
-                                         <div class="panel-body">
-                                             <input id="dataListCheck" type="checkbox" name="dataListC" value="dataListC" onclick="dataList()">
-                                                <label for="dataListC" style="vertical-align: middle;">إرسال رسائل نصية لمجموعة من الأسماء:</label>
-                                                    {{-- action=""--}}
-                                                <form action="{{ route('send_group_messages') }}" method="POST" enctype="multipart/form-data" id="dataListForm" style="display:none; padding-top: 20px;border-top: 1px solid #e2e2e2;">
-                                                    @csrf
-                                                    <input type="hidden" id="message_type_id" name="message_type_id">
-                                                    <div class="form-group row">
-                                                        <div class="col-sm-6">
-                                                            <span> يجب رفع بيانات ارسال الرسائل حسب النموذج المرفق:  </span>
-                                                            <a href="{{ route('download-sample-file') }}" class="btn btn-primary"
-                                                               style="margin-top:10px;margin-right: 15%;"><i class="fa fa-download" style=""></i> تحميل
-                                                                نموذج الملف المطلوب </a>
-                                                        </div>
-
-                                                        <div class="col-sm-4" style="display: inline-flex;margin-top: 2%;">
-                                                            <input type="file" name="data_file" style="width: 200px;"/>
-                                                            <input type="submit" style="width:70px;padding: 0.4rem 2rem !important;font-size: 1.3rem !important;" value="رفع" class="btn btn-primary"/>
-                                                        </div>
-                                                    </div>
-                                                    <hr>
-                                                </form>
-                                         </div>
-                                     </div>
-                                     </div>
-                                     <div class="col-md-12">
-                                        <div id="addNewPanel" class="panel panel-default" style="margin-top:15px;">
-                                     <div class="panel-body">
-                                         <input id="addNewCheck" type="checkbox" name="addNewC" value="addNewC" onclick="addNewCitizen()">
-                                         <label for="addNewC" style="vertical-align: middle;">إرسال رسائل نصية بشكل فردي:</label>
-
-                                         <form id="addNewForm" method="post" action="{{ route('send_single_message') }}"
-                                               style="display:none; padding-top: 20px;border-top: 1px solid #e2e2e2;">
-                                             @csrf
-                                             <input type="hidden" id="message_type_id_1" name="message_type_id_1">
-
-                                             <div class="form-group row">
-                                                 <div class="col-md-2">
-                                                     <label class="form-check-label">رقم التواصل</label>
-                                                 </div>
-                                                 <div class="col-md-6">
-                                                     <input class="form-control {{($errors->first('mobile') ? " form-error" : "")}}" type="number" value="{{old('mobile')}}" name="mobile" id="mobile" style="width: 80%">
-                                                    {!! $errors->first('mobile', '<p class="help-block" style="color:red;">:message</p>') !!}
-
-
-                                                 </div>
-                                             </div>
-
-                                              <div class="form-group row">
-                                                 <div class="col-md-2">
-                                                     <label class="form-check-label">نص الرسالة النصية</label>
-                                                 </div>
-                                                 <div class="col-md-6">
-                                                     <input class="form-control" type="text" value="{{old('message_text')}}" name="message_text" id="message_text" style="width: 80%">
-                                                     <div style="margin-top: 5px;">
-                                                         عدد الاحرف يساوي
-                                                         <span id="count_of_letters" style="color:red;">0</span>
-                                                     </div>
-                                                 </div>
-                                             </div>
-
-                                             <div class="form-actions" style="text-align: left;">
-                                                 <input type="submit" class="btn btn-success" value="إرسال">
-                                                 <a type="button" href="/account/message" class="btn btn-light">إلغاء</a>
-                                             </div>
-
-                                         </form>
-                                     </div>
-
-
-                                 </div>
-                                     </div>
-                                 </div>
-                             </div>
-                        </div>
-                    </div>
+    <div class="col-sm-12 msg">
+        <br>
+        <br>
+        <form method="post" action="/account/message/store" autocomplete="off" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label for="message_name" class="col-form-label">نوع الرسالة: </label>
                 </div>
-              </div>
-          </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" value="" id="name" name="name">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label for="text" class="col-form-label">نص الرسالة:</label>
+                </div>
+                <div class="col-sm-6">
+                    <input type="text" class="form-control" onkeyup="countChar(this);" value="" id="message_text" name="text">
+                </div>
+
+            </div>
+
+{{--            <div class="form-group row">--}}
+{{--                <div class="col-sm-4">--}}
+{{--                    <label for="send_procedure" class="col-form-label">آلية الإرسال:</label>--}}
+{{--                </div>--}}
+{{--                <div class="col-sm-6">--}}
+{{--                    <select name="send_procedure" class="form-control">--}}
+{{--                        <option value="" >آلية الإرسال</option>--}}
+{{--                        <option value="تلقائي" >تلقائي</option>--}}
+{{--                        <option value="يدوي">يدوي</option>--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+
+{{--            </div>--}}
+            <br>
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label for="" class="col-form-label">تفاصيل ذات علاقة بحجم الرسالة:</label>
+                </div>
+
+                <div class="col-sm-2" style="margin-right: 15px;margin-left: 10px;padding:5px;border-radius: 5px;border: 1px solid red;">
+                    <label for="Remaining_letters" class="col-form-label">عدد الرسائل :</label>
+                    <span id="count_of_letter" style="color:red;" name="count_of_letter">0</span>
+                    <input type="hidden" id="hidden_count_of_letter" name="count_of_letter">
+                </div>
+
+                <div class="col-sm-2" style="margin-left: 10px;padding:5px;border-radius: 5px;border: 1px solid gray;">
+                    <label for="Remaining_letters" class="col-form-label">الحروف المتبقية :</label>
+                    <span id="charNum" style="color:red;" name="Remaining_letters">0</span>
+                    <input type="hidden"  id="hidden_Remaining_letters" name="Remaining_letters">
+                </div>
+
+                <div class="col-sm-2" style="margin-left: 10px;padding:5px;border-radius: 5px;border: 1px solid yellow;">
+                    <label for="consumed_letters" class="col-form-label">الحروف المستهلكة :</label>
+                    <span id="count_of_letters" style="color:red;" name="consumed_letters">0</span>
+                    <input type="hidden"  id="hidden_consumed_letters" name="consumed_letters">
+
+                </div>
+
+            </div>
+            <br>
+            <div class="form-group row" style="float:left;margin-bottom: 10px;">
+                <input type="submit" class="btn btn-success" value="إضافة"/>
+                <a href="events" class="btn btn-light">الغاء الامر</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="clearfix"></div>
+    <br><hr>
+    @if($items)
+        @if($items->count()>0)
+
+            <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th style="max-width: 30px;word-break: normal;">#</th>
+                        <th style="max-width: 100px;word-break: normal;">نوع الرسالة</th>
+                        <th style="max-width: 200px;word-break: normal;"> نص رسالة</th>
+                        <th style="word-break: normal;" colspan="3">تفاصيل ذات علاقة بالرسالة</th>
+                        <th style="word-break: normal;"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($items as $a)
+
+                        @if($a->id)
+                            <tr>
+                                <td style="word-break: normal;">{{$a->id}}</td>
+                                <td style="word-break: normal;">{{$a->name }}</td>
+                                <td style="max-width:200px;word-break: normal;">{{$a->text}}</td>
+                                <td style="word-break: normal;" colspan="3">
+                                    <div class="col-sm-3" style="margin-right: 15px;margin-left: 10px;padding:5px;border-radius: 5px;border: 1px solid red;">
+                                        <label for="Remaining_letters" class="col-form-label">عدد الرسائل :</label>
+                                        <span id="count_of_letter" style="color:red;" name="count_of_letter">{{$a->count_of_letter}}</span>
+                                    </div>
+
+                                    <div class="col-sm-3" style="margin-left: 10px;padding:5px;border-radius: 5px;border: 1px solid gray;">
+                                        <label for="Remaining_letters" class="col-form-label">الحروف المتبقية :</label>
+                                        <span id="charNum" style="color:red;" name="Remaining_letters">{{$a->Remaining_letters}}</span>
+                                    </div>
+
+                                    <div class="col-sm-4" style="margin-left: 10px;padding:5px;border-radius: 5px;border: 1px solid yellow;">
+                                        <label for="consumed_letters" class="col-form-label">الحروف المستهلكة :</label>
+                                        <span id="count_of_letters" style="color:red;" name="consumed_letters">{{$a->consumed_letters}}</span>
+
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @if(Auth::user()->account->circle_id==1)
+                                        <a class="btn btn-xs btn-primary" title="تعديل"
+                                           href="/account/message/edit/{{$a->id}}"><i class="fa fa-edit"></i></a>
+
+                                        <a class="btn btn-xs Confirm btn-danger"
+                                           href="/account/message/delete/{{$a->id}}"><i
+                                                class="fa fa-trash"></i></a>
+                                    @endif
+                                </td>
+
+                            </tr>
+                        @endif
+                    @endforeach
+                    </tbody>
+                </table>
+            <br>
+            <br>
+        @else
+            <br><br>
+            <div class="alert alert-warning">نأسف لا يوجد بيانات لعرضها</div>
+        @endif
+    @else
+        <br>
+        <br>
+        <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th style="max-width: 30px;word-break: normal;">#</th>
+                    <th style="max-width: 100px;word-break: normal;">نوع الرسالة</th>
+                    <th style="max-width: 100px;word-break: normal;"> نص رسالة</th>
+                    <th style="word-break: normal;" colspan="2">تفاصيل ذات علاقة بالرسالة</th>
+                </tr>
+                </thead>
+            </table>
+    @endif
+
+
+
 @endsection
 
-        @section('js')
-            <script>
-                $('body').on("keyup",'#message_text', function(){
-                    doneTyping();
-                });
+@section('js')
+    <script src="https://unpkg.com/vue"></script>
+    <script src="http://code.jquery.com/jquery-1.5.js"></script>
+    <script>
+        $('.msg').hide();
+        $('.msg-btn').click(function () {
 
-                function doneTyping () {
-                    let str = $('#message_text').val();
-                    let letterCount = str.replace(/\s/g,'').length;
-                    $('#count_of_letters').text(letterCount);
+            $('.msg').slideToggle("fast", function () {
+                if ($('.msg').is(':hidden')) {
+                    $('#searchonly').show();
+                } else {
+                    $('#searchonly').hide();
                 }
-
-                function gettype(){
-                    console.log( "ready!" );
-                    $('#message_type_id').val($('#message_type_id_selection').val());
-                    $('#message_type_id_1').val($('#message_type_id_selection').val());
-                }
-
-            </script>
-            <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-            <script>
-        new Vue({
-            el: '#app',
-            data: {
-                benefic_show: false,
-                citizen_show: false,
-                group_show: false,
-                single_show: false,
-            },
+            });
         });
-
-        function dataList() {
-            // Get the checkbox
-            var checkBox = document.getElementById("dataListCheck");
-            // Get the output text
-            var text = document.getElementById("dataListForm");
-
-            // If the checkbox is checked, display the output text
-            if (checkBox.checked == true) {
-                text.style.display = "block";
-            } else {
-                text.style.display = "none";
-            }
-        }
-
-        function addNewCitizen() {
-            // Get the checkbox
-            var checkBox = document.getElementById("addNewCheck");
-            // Get the output text
-            var text = document.getElementById("addNewForm");
-
-            // If the checkbox is checked, display the output text
-            if (checkBox.checked == true) {
-                text.style.display = "block";
-            } else {
-                text.style.display = "none";
-            }
-        }
 
 
     </script>
-@endsection
+    <script>
+        function countChar(val) {
+            var message = 70;
+            var len = val.value.length;
+            $('#count_of_letters').text(len);
+            $('#hidden_consumed_letters').val(len);
+            if(len <= message && len != 0){
+                $('#count_of_letter').text(1);
+                $('#hidden_count_of_letter').val(1);
+                $('#charNum').text(message - len);
+                $('#hidden_Remaining_letters').val(message - len);
+            }else if(len <= message*2 && len != 0){
+                $('#count_of_letter').text(2);
+                $('#hidden_count_of_letter').val(2);
+                $('#charNum').text(message*2 - len);
+                $('#hidden_Remaining_letters').val(message*2 - len);
+            }else if(len <= message*3 && len != 0){
+                $('#count_of_letter').text(3);
+                $('#hidden_count_of_letter').val(3);
+                $('#charNum').text(message*3 - len);
+                $('#hidden_Remaining_letters').val(message*3 - len);
+            }else{
+                $('#count_of_letter').text(4);
+                $('#hidden_count_of_letter').val(4);
+                $('#charNum').text(message*4 - len);
+                $('#hidden_Remaining_letters').val(message*4 - len);
+            }
 
+        }
+    </script>
+@endsection

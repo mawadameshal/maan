@@ -87,7 +87,7 @@
     @foreach($auth_circle_users as $AccountProjects_user)
         @if($AccountProjects_user == auth()->user()->account->id)
             @section("content")
-                <div class="row" style="" id="auth_circle_users">
+    <div class="row" style="" id="auth_circle_users">
         <div>
             <h2 class="col-sm-12" style="margin-top:120px;margin-bottom:20px;margin-left:0px;">
                 متابعة ال{{$item->form_type->name}}
@@ -1114,16 +1114,19 @@
             </div>
         </div>
     </div>
-            @endsection
+
+    <!--****************************************************** start footer **************************************************************-->
+@endsection
         @endif
     @endforeach
 @endif
+
 
 @if($auth_circle_users2)
     @foreach($auth_circle_users2 as $AccountProjects_user)
         @if($AccountProjects_user == auth()->user()->account->id)
             @section("content")
-                <div class="row" style="" id="auth_circle_users2">
+    <div class="row" style="" id="auth_circle_users2">
         <div>
             <h2 class="col-sm-12" style="margin-top:120px;margin-bottom:20px;margin-left:0px;">
                 متابعة ال{{$item->form_type->name}}
@@ -2161,14 +2164,16 @@
             </div>
         </div>
     </div>
-            @endsection
+
+    <!--****************************************************** start footer **************************************************************-->
+@endsection
         @endif
     @endforeach
 @endif
 
 @if(!$auth_circle_users && !$auth_circle_users2)
     @section("content")
-        <div class="row" style="text-align:center;">
+    <div class="row" style="text-align:center;">
         <br>
         <br>
         <br>
@@ -2176,7 +2181,7 @@
         <h2 class="col-sm-6" style="margin-top:120px;margin-bottom:30px;color:#af0922;margin-left:337px;">يرجى التأكد من
             صحة الرابط المراد الوصول له</h2>
     </div>
-    @endsection
+@endsection
 @endif
 
 @section('js')

@@ -74,7 +74,7 @@
             <tr>
                 <th style="max-width: 30px;word-break: normal;"># </th>
             <th style="max-width: 100px;word-break: normal;">اسم الملحق</th>
-            <th style="max-width: 100px;word-break: normal;">نوع الملحق</th>
+            <th style="max-width: 100px;word-break: normal;">وصف الملحق</th>
             <th style="max-width: 100px;word-break: normal;">تاريخ تحديث الملحق</th>
             <th style="word-break: normal;">تفاصيل ذات علاقة بالملحق</th>
             </tr>
@@ -86,11 +86,12 @@
                 <tr>
                     <td style="word-break: normal;">{{$a->id}}</td>
                     <td style="word-break: normal;">{{$a->appendix_name }}</td>
-                    <td style="word-break: normal;">{{$a->appendix_describe}}</td>
+                    <td style="max-width: 250px;word-break: normal;">{{$a->appendix_describe}}</td>
                     <td style="max-width: 60px;word-break: normal;">{{$a->updated_at }}</td>
                     <td style="text-align: center;">
 
-                        <a class="btn btn-xs btn-primary" href="/account/appendix/show/{{$a->id}}" title="معاينة">
+                        <a class="btn btn-xs btn-primary" data-toggle="modal" id="smallButton" data-target="#smallModal"
+                           data-attr="{{ route('showappendix', $a->id) }}" title="معاينة">
                             <i class="glyphicon glyphicon-eye-open"></i>
                         </a>
 
@@ -124,7 +125,7 @@
         <tr>
             <th style="max-width: 30px;word-break: normal;"># </th>
             <th style="max-width: 100px;word-break: normal;">اسم الملحق</th>
-            <th style="max-width: 100px;word-break: normal;">نوع الملحق</th>
+            <th style="max-width: 100px;word-break: normal;">وصف الملحق</th>
             <th style="max-width: 100px;word-break: normal;">تاريخ تحديث الملحق</th>
             <th style="word-break: normal;">تفاصيل ذات علاقة بالملحق</th>
         </tr>

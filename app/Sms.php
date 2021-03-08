@@ -8,7 +8,6 @@ class Sms extends Model
 {
     //
     protected $table = "sms";
-    protected $fillable =['mobile', 'message_type_id', 'message_text', 'count_message','name'];
-
+    protected $fillable =['mobile', 'message_type_id', 'citizen_id','form_id','user_id'];
 
 }

@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Account;
 use App\Account;
 use App\Notification;
 use App\Project;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Pusher\Pusher;
 
@@ -14,22 +15,66 @@ class NotificationController extends BaseController
 {
     public function index(Request $request)
     {
-        $q = $request["q"]??"";
-        $items = auth()->user()->notifications()->whereRaw("true");
-        if ($q)
-            $items->whereRaw("(title like ? )"
-                , ["%$q%"]);
 
-        $items->getQuery()->getQuery()->where('user_id',auth()->user()->id)->update(['read_at' => date('Y-m-d h:m:s')]);
+        $notification_type = $request["notification_type"]??"";
+        $user_name = $request["user_name"]??"";
+        $project_id = $request["project_id"]??"";
+        $notification_status = $request["notification_status"]??"";
+        $datee = $request["datee"]??"";
+        $from_date = $request["from_date"]??"";
+        $to_date = $request["to_date"]??"";
+
+//        $items = auth()->user()->notifications()->whereRaw("true");
+        $items = Notification::whereRaw("true");
+
+        if ($items == null) {
+            session::flash('msg', 'w:نأسف لا يوجد بيانات لعرضها');
+            return redirect('/account/notifications');
+        }
+
+        if (!is_null($request['notification_status']))
+        {
+            if($request['notification_status'] == 1 ){
+                $items = $items->where('read_at','=',"");
+            }else{
+                $items = $items->where('read_at','!=',"");
+            }
+
+        }
+
+        if ($notification_type)
+            $items->where("title", "=", $notification_type);
+
+        if ($datee)
+            $items->where('created_at' , Carbon::parse(request('datee'))->format('Y-m-d'));
+
+        if($to_date)
+            $items->where([['created_at' ,'>=', Carbon::parse(request('from_date'))->format('Y-m-d')] , ['created_at' ,'<=', Carbon::parse(request('to_date'))->format('Y-m-d')]]);
+
+
+        if($from_date)
+            $items->where([['created_at' ,'>=', Carbon::parse(request('from_date'))->format('Y-m-d')] , ['created_at' ,'<=', Carbon::parse(request('to_date'))->format('Y-m-d')]]);
+
+
+        if ($user_name)
+            $items->whereRaw("(type like ?)"
+            , ["%$user_name%"]);
+
+//        $items->getQuery()->getQuery()->where('user_id',auth()->user()->id)->update(['read_at' => date('Y-m-d h:m:s')]);
 
         if(request("theaction") == 'search'){
-            $items = $items->orderBy("id",'desc')->paginate(5)->appends([
-                "q" => $q]);
+            $items = $items->paginate(5)->appends(
+                [
+                    "notification_type" => $notification_type,
+                    "user_name" => $user_name,
+                    "notification_status" => $notification_status
+                ]);
         }else{
             $items = "";
         }
         $projects = Project::all();
-        return view("account.notifications.index", compact('items','projects'));
+        $notifications = Notification::select('title')->distinct()->get();
+        return view("account.notifications.index", compact('items','projects','notifications'));
 
 
     }

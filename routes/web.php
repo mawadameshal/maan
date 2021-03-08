@@ -68,7 +68,10 @@ Route::post('/account/appendix', 'Account\AppendixController@store');
 Route::get('/account/appendix/edit/{id}', 'Account\AppendixController@edit')->name('appendix.edit');
 Route::post('/account/appendix/update/{id}', 'Account\AppendixController@update');
 Route::get('/account/appendix/delete/{id}', 'Account\AppendixController@destory');
-Route::get('/account/appendix/show/{id}','Account\AppendixController@showfiles');
+Route::get('/account/appendix/show/{id}','Account\AppendixController@showfiles')->name('appendixshow');
+
+
+Route::resource('/account/recommendations', 'Account\RecommendationsController');
 
 Route::post('/back','Account\HomeController@backup');
 ///لوجين ونسيت
@@ -119,15 +122,24 @@ Route::get('/notbenfit','Account\CitizenController@not_benefit')->name('not_bene
 
 Route::resource("/account/notifications/", "Account\NotificationController");
 //SMS
-Route::resource("/account/message", "Account\MessageController");
 
-Route::post('/account/message/importmessage','Account\messageController@send_group_messages')->name('send_group_messages');
-Route::post('/account/message/send_single_message','Account\messageController@send_single_message')->name('send_single_message');
+Route::resource("/account/message", "Account\MessageController");
+Route::post("/account/message/store", 'Account\MessageController@store');
+Route::get("/account/message/send_message", 'Account\MessageController@show');
+Route::get("/account/message/create", 'Account\MessageController@create');
+Route::get('/account/message/edit/{id}', 'Account\MessageController@edit');
+Route::post('/account/message/update/{id}', 'Account\MessageController@update');
+Route::get('/account/message/delete/{id}', 'Account\MessageController@destory');
+
+Route::post('/account/message/importmessage','Account\MessageController@send_group_messages')->name('send_group_messages');
+Route::post('/account/message/send_single_message','Account\MessageController@send_single_message')->name('send_single_message');
 
 //ادارة الفئات
 Route::resource("/account/category","Account\CategoryController");
 Route::get("/account/category/showcircle/{id}","Account\CategoryController@showcircle");
 Route::post("account/category/get_categories/{is_complaint}","Account\CategoryController@get_categories");
+
+Route::post("account/message/get_messagecount/{id}","Account\MessageController@get_messagecount");
 
 Route::resource("/account/suggest","Account\SuggestController");
 Route::get('/account/category/delete/{id}','Account\CategoryController@destroy');
@@ -144,6 +156,7 @@ Route::post('/account/circle/select-category-post/{id}','Account\CircleControlle
 //ادارة النماذج
 Route::post('/account/form/delete','Account\FormController@destroy')->name('delete_form');
 Route::post('/account/form/destroy_from_citizian','Account\FormController@destroy_from_citizian')->name('destroy_from_citizian');
+Route::post('/account/form/confirm_destroy_from_citizian','Account\FormController@confirm_destroy_from_citizian')->name('confirm_destroy_from_citizian');
 Route::resource("/account/form","Account\FormController");
 Route::get("/download_form_file/{id}","Account\FormController@download_form_file")->name('download_form_file');
 
@@ -167,6 +180,9 @@ Route::get('/citizen/form/show1/{ido}/{id}','Citizen\FormController@show1');
 Route::post('/citizen/form/save_form_followup/{id}','Citizen\FormController@save_form_followup')->name('save_form_followup');
 
 Route::get('/account/form/showfiles/{id}','Account\FormController@showfiles')->name('showfiles');
+Route::get('/account/appendix/showappendix/{id}','Account\AppendixController@showappendix')->name('showappendix');
+Route::get('/account/appendix/showrecommendations/{id}','Account\RecommendationsController@showrecommendations')->name('showrecommendations');
+
 Route::get('/citizen/form/showfiles/{id}','Citizen\FormController@showfiles')->name('citizenshowfiles');
 /////////////////المواطن
 //اضافة النماذج

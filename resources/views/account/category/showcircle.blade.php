@@ -24,7 +24,7 @@
                     <tr>
                         <th style="max-width: 100px;word-break: normal;">الفئة الرئيسية</th>
                         <th style="max-width: 100px;word-break: normal;">الفئة الفرعية</th>
-                        <th style="max-width: 100px;word-break: normal;">نوع الإجراء</th>
+                        <th colspan="2" style="max-width: 100px;word-break: normal;">نوع الإجراء</th>
                         @foreach($circles as $circle)
                             <th style="max-width: 100px;word-break: normal;">{{$circle->name}}</th>
                         @endforeach
@@ -32,13 +32,18 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td  colspan="1" rowspan="5" scope="col" style="word-break: normal;" id="maincat">{{$name}}</td>
-                        <td  colspan="1" rowspan="5" scope="col" style="word-break: normal;" id="subcat">{{$item->name}}</td>
+                        <td  colspan="1" rowspan="6" scope="col" style="word-break: normal;" id="maincat">{{$name}}</td>
+                        <td  colspan="1" rowspan="6" scope="col" style="word-break: normal;" id="subcat">{{$item->name}}</td>
                     </tr>
                     @foreach($procedureTypes as $procedureType)
                         <tr>
-                            <td style="word-break: normal;" id="{{$procedureType->id}}">{{$procedureType->name}}</td>
-                            @foreach($circles as $circle)
+                            @if($procedureType->id != 2 && $procedureType->id != 3)
+                            <td colspan="2" style="word-break: normal;" id="{{$procedureType->id}}">{{$procedureType->name}}</td>
+                            @else
+                                <td  style="word-break: normal;">الجهات المختصة بمعالجة الشكوى</td>
+                                <td  style="word-break: normal;" id="{{$procedureType->id}}">{{$procedureType->name}}</td>
+                            @endif
+                                @foreach($circles as $circle)
                                 <td  style="text-align:center;max-width: 100px;word-break: normal;">
                                     <input  disabled="disabled" type="checkbox" name="category_circle[]" value="{{$procedureType->id.'_'.$circle->id}}" @if(in_array($procedureType->id.'_'.$circle->id,$Cat)) {{'checked'}} @endif>
                                 </td>
@@ -50,4 +55,23 @@
             </div>
         </div>
     </div>
+@endsection
+@section('js')
+    <script>
+        const table = document.querySelector('table');
+
+        let headerCell = null;
+
+        for (let row of table.rows) {
+            const firstCell = row.cells[0];
+
+            if (headerCell === null || firstCell.innerText !== headerCell.innerText) {
+                headerCell = firstCell;
+            } else {
+                headerCell.rowSpan++;
+                headerCell.style = "vertical-align: middle";
+                firstCell.remove();
+            }
+        }
+    </script>
 @endsection

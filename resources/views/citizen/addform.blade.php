@@ -170,27 +170,26 @@
             <div class="form-group row">
                 <div class="col-sm-6">
                     <label for="category_id"  class="col-sm-4 col-form-label">فئات الشكوى</label>
+
                     <select id="category" class="form-control {{($errors->first('category_id') ? " form-error" : "")}}" id="sel1" name="category_id">
                         <option value="">اختر فئة الشكوى </option>
+
                         @foreach($category as $cat)
-                            @if($cat->id != 1 && $cat->id != 2)
-                                @if($project_id>1)
-                                    @if($cat->benefic_show==0)
-                                        @continue
-                                    @endif
-                                    @if($cat->is_complaint != 0)
-                                        <option value="{{$cat->id}}"
-                                                @if(old("category_id")==$cat->id)selected @endif>{{$cat->name}}</option>
-                                    @endif
+                            @if($project_id>1)
+                                @if($cat->benefic_show==0)
+                                    @continue
                                 @endif
-                                @if($project_id==1)
-                                    @if($cat->citizen_show==0)
-                                        @continue
-                                    @endif
-                                    @if($cat->is_complaint != 0)
-                                        <option value="{{$cat->id}}"
-                                                @if(old("category_id")==$cat->id)selected @endif>{{$cat->name}}</option>
-                                    @endif
+                                @if($cat->is_complaint != 0)
+                                    <option value="{{$cat->id}}" @if(old("category_id")==$cat->id)selected @endif>{{$cat->name}}</option>
+                                @endif
+                            @endif
+                            @if($project_id==1)
+                                @if($cat->citizen_show==0)
+                                    @continue
+                                @endif
+                                @if($cat->is_complaint != 0)
+                                    <option value="{{$cat->id}}"
+                                            @if(old("category_id")==$cat->id)selected @endif>{{$cat->name}}</option>
                                 @endif
                             @endif
                         @endforeach
@@ -206,8 +205,7 @@
                 <select id="category" class="form-control {{($errors->first('category_id') ? " form-error" : "")}}" id="sel1" name="category_id">
                     <option value=""> اختر فئة الاقتراح</option>
                     @foreach($category as $cat)
-                        @if($cat->id != 1 && $cat->id != 2)
-                            @if($project_id>1)
+                        @if($project_id>1)
                                 @if($cat->benefic_show==0)
                                     @continue
                                 @endif
@@ -216,7 +214,7 @@
                                             @if(old("category_id")==$cat->id)selected @endif>{{$cat->name}}</option>
                                 @endif
                             @endif
-                            @if($project_id==1)
+                        @if($project_id==1)
                                 @if($cat->citizen_show==0)
                                     @continue
                                 @endif
@@ -225,7 +223,6 @@
                                             @if(old("category_id")==$cat->id)selected @endif>{{$cat->name}}</option>
                                 @endif
                             @endif
-                        @endif
                     @endforeach
                 </select>
                 {!! $errors->first('category_id', '<p class="help-block" style="color:red;">:message</p>') !!}

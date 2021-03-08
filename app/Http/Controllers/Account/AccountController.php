@@ -7,6 +7,7 @@ use App\Circle;
 use App\Form_response;
 use App\Form_status;
 use App\Form_type;
+use App\Project_status;
 use App\Sent_type;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -135,10 +136,12 @@ class AccountController extends BaseController
         ]);
         $request["user_id"] = $user_id;
         $request["type"] = 2;
+        $request["full_name"] = $request["user_name"];
         $theid = Account::create($request->all())->id;
         Session::flash("msg", "تمت عملية الاضافة بنجاح");
         // dd($theid);
-        return redirect("/account/account/permission/$theid");
+//        return redirect("/account/account/permission/$theid");
+        return redirect("/account/account/select-project/$theid");
     }
 
     public function edit($id)
@@ -811,16 +814,79 @@ class AccountController extends BaseController
         }
     }
 
-    public function selectproject($id)
+    public function selectproject(Request $request,$id)
     {
         $item = Account::find($id);
         if ($item == NULL) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
             return redirect("/account/account");
         }
-        $projects = Project::all();
+
+        $projects_for_select = Project::all();
+        $status_work = $request["status_work"] ?? "";
+        $project_code = $request["project_code"] ?? "";
+        $project_name = $request["project_name"] ?? "";
+        $project_status = $request["project_status"] ?? "";
+        $from_date = $request["from_date"] ?? "";
+        $to_date = $request["to_date"] ?? "";
+        $projects = Project::whereRaw("true");
+
+        if ($status_work) {
+            $projectforuser = [];
+            foreach ($item->projects as $project){
+                array_push($projectforuser,$project->id);
+            }
+            if($status_work == 1){
+                $projects->whereIn("id", $projectforuser);
+            }else{
+                $projects->whereNotIn("id", $projectforuser);
+            }
+
+        }
+
+        if ($project_code) {
+            $projects->where("id", "=", $project_code);
+        }
+
+        if ($project_name) {
+            $projects->where("id", "=", $project_name);
+        }
+
+        if ($project_status) {
+            $projects->where("active", "=", $project_status);
+        }
+
+        if ($from_date) {
+            $projects->where("start_date", "=", $from_date);
+        }
+
+        if ($to_date) {
+            $projects->where("end_date", "=", $to_date);
+        }
+
+
+        if ($request['theaction'] == 'search')
+        {
+            $projects = $projects->orderBy("start_date")->paginate(5)->appends(
+                [
+                    "status_work" => $status_work,
+                    "project_code"=>$project_code,
+                    "project_name" => $project_name,
+                    "project_status" => $project_status,
+                    "from_date" => $from_date,
+                    "to_date" => $to_date,
+                    "theaction" => 'search'
+                ]);
+
+        }else{
+            $projects  = "" ;
+        }
+
         $account_rates=Account_rate::all();
-        return view("account.account.add-toproject", compact("account_rates","item","projects"));
+        $accounts=Account::all();
+        $circles = Circle::all();
+        $project_status = Project_status::all();
+        return view("account.account.add-toproject", compact("account_rates","projects_for_select","project_status","circles","item","projects","accounts"));
     }
 
     public function selectprojectPost(Request $request, $id)
@@ -838,9 +904,12 @@ class AccountController extends BaseController
                 if ($request["projects"][$i] == 0)
                     continue;
 
+                $rateforaccount = Account::find($id);
+
                 $test = \DB::table("account_project")->insertGetID(["account_id" => $id,
-                    "project_id" => $request["projects"][$i]
+                    "project_id" => $request["projects"][$i],"rate" =>$rateforaccount->circle_id
                 ]);
+
 
                 /**************اضافتهم بالبروجكت*************/
                 $manager = "";

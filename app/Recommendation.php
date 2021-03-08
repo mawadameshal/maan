@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Recommendation extends Model
 {
     protected $table = "recommendations";
-    protected $fillable =['content', 'form_id','user_id'];
+    protected $fillable =['recommendations_content', 'form_id','user_id'];
 
     public function form(){
-        return $this->hasMany('App\Form');
+        return $this->belongsTo('App\Form');
     }
 
     public function user() {

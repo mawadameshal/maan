@@ -71,16 +71,32 @@ class ProjectController extends BaseController
         $end_date = $request["end_date"] ?? "";
         $in_date = $request["in_date"] ?? "";
         $active = $request["active"] ?? "";
-        $items = Account::find(auth()->user()->account->id)->projects()->join('project_status', 'projects.active', '=', 'project_status.id')
-            ->select('projects.id',
-            'projects.code',
-             'projects.name',
-              'projects.coordinator',//منسق المشروع
-              'projects.supervisor', //سابقا المشرف , الان قسم المتابعة
-              'projects.manager',   // مدير البرنامج
-                  'project_status.name as names',
-                'projects.start_date', 'projects.end_date')
-            ->whereRaw("true");
+        if(auth()->user()->account->id == 1){
+
+            $items = Project::join('project_status', 'projects.active', '=', 'project_status.id')
+                ->select('projects.id',
+                    'projects.code',
+                    'projects.name',
+                    'projects.coordinator',//منسق المشروع
+                    'projects.supervisor', //سابقا المشرف , الان قسم المتابعة
+                    'projects.manager',   // مدير البرنامج
+                    'project_status.name as names',
+                    'projects.start_date', 'projects.end_date')
+                ->whereRaw("true");
+
+        }else{
+            $items = Account::find(auth()->user()->account->id)->projects()->join('project_status', 'projects.active', '=', 'project_status.id')
+                ->select('projects.id',
+                    'projects.code',
+                    'projects.name',
+                    'projects.coordinator',//منسق المشروع
+                    'projects.supervisor', //سابقا المشرف , الان قسم المتابعة
+                    'projects.manager',   // مدير البرنامج
+                    'project_status.name as names',
+                    'projects.start_date', 'projects.end_date')
+                ->whereRaw("true");
+        }
+
          if ($q)
              $items->whereRaw("(projects.name like ? or code like ? or manager like ? or supervisor like ? or coordinator like ?)"
                  , ["%$q%", "%$q%", "%$q%", "%$q%", "%$q%"]);
@@ -241,15 +257,10 @@ class ProjectController extends BaseController
         /**/
         $accouts_ids = Account::where('type', "=", '1')->pluck('id')->toArray();
         for ($i = 0; $i < count($accouts_ids); $i++) {
+            $rateforaccount = Account::find($accouts_ids[$i]);
             $test = \DB::table("account_project")->insertGetID(["account_id" => $accouts_ids[$i],
-                "project_id" => $pro_id
-                , "rate" => 6
-                , "to_delete" => 1
-                , "to_add" => 1
-                , "to_edit" => 1
-                , "to_replay" => 1
-                , "to_stop" => 1
-                , "to_notify" => 1]);
+                "project_id" => $pro_id,
+                "rate" =>$rateforaccount->circle_id]);
         }
 
         /**/
@@ -748,25 +759,57 @@ class ProjectController extends BaseController
 
     public function stuffinproject($id, Request $request)
     {
-        $item = Account::find(auth()->user()->account->id)->projects()->find($id);
+        if(auth()->user()->account->id == 1){
+            $item = Project::find($id);
+        }else{
+            $item = Account::find(auth()->user()->account->id)->projects()->find($id);
+        }
         if ($item == NULL) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
             return redirect("/account/project");
         }
-        $q = $request["q"] ?? "";
+        $status_worker = $request["status_worker"] ?? "";
+        $account_id = $request["account_id"] ?? "";
+        $circle_id = $request["circle_id"] ?? "";
+
         $items =Account::whereRaw("true");
         if ($items == null) {
             session::flash('msg', 'w:نأسف لا يوجد بيانات لعرضها');
             return redirect('/account/account');
         }
-        if ($q)
-            $items->whereRaw("(full_name like ? or email like ? or mobile like ?)"
-                , ["%$q%", "%$q%", "%$q%"]);
+        if ($account_id){
+            $items->where('id','=',$account_id);
+        }
 
-        $items = $items->orderBy("full_name")->paginate(100)->appends([
-            "q" => $q]);
-        $account_rates=Account_rate::all();
-        return view("account.project.stuffinproject", compact("item","account_rates", "items"));
+        if ($circle_id){
+            $items->where('circle_id','=',$circle_id);
+        }
+        if ($status_worker) {
+            $projectforuser = [];
+            foreach ($item->accounts as $project){
+                array_push($projectforuser,$project->id);
+            }
+            if($status_worker == 1){
+                $items->whereIn("id", $projectforuser);
+            }else{
+                $items->whereNotIn("id", $projectforuser);
+            }
+
+        }
+
+        if ($request['theaction'] == 'search') {
+            $items = $items->orderBy("full_name")->paginate(5)->appends([
+                "status_worker" => $status_worker,
+                "account_id" => $account_id,
+                "circle_id" => $circle_id,
+                "theaction" => "search"
+            ]);
+        }else{
+            $items  = "" ;
+        }
+        $accounts=Account::all();
+        $circles=Circle::all();
+        return view("account.project.stuffinproject", compact("item","circles", "items","accounts"));
     }
 
     public function stuffinprojectPost(Request $request, $id)
@@ -784,30 +827,31 @@ class ProjectController extends BaseController
                 if ($request["accounts"][$i] == 0)
                     continue;
 
+                $rateforaccount = Account::find($request["accounts"][$i]);
 
                 $test = \DB::table("account_project")->insertGetID(["project_id" => $id,
-                    "account_id" => $request["accounts"][$i]
+                    "account_id" => $request["accounts"][$i],"rate" =>$rateforaccount->circle_id
                 ]);
 
                 /**************اضافتهم بالبروجكت*************/
 
                 $ratename="";
-                $item = Account::find($request["accounts"][$i]);
-                if ($request["rates"][$i]==1) {
-                    $ratename='manager';
-                }
-                elseif ($request["rates"][$i]==2) {
-                    $ratename='supervisor';
-                }
-                elseif ($request["rates"][$i]==3) {
-                    $ratename='coordinator';
-                }
-                elseif ($request["rates"][$i]==4) {
-                    $ratename='support';
-                }
-                if($ratename!="")
-                Project::find($id)->update([
-                    ''.$ratename.'' => $item->full_name]);
+//                $item = Account::find($request["accounts"][$i]);
+//                if ($request["rates"][$i]==1) {
+//                    $ratename='manager';
+//                }
+//                elseif ($request["rates"][$i]==2) {
+//                    $ratename='supervisor';
+//                }
+//                elseif ($request["rates"][$i]==3) {
+//                    $ratename='coordinator';
+//                }
+//                elseif ($request["rates"][$i]==4) {
+//                    $ratename='support';
+//                }
+//                if($ratename!="")
+//                Project::find($id)->update([
+//                    ''.$ratename.'' => $item->full_name]);
             }
         }
         Session::flash("msg", "i:تمت عملية الحفظ بنجاح");

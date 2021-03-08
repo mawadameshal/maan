@@ -93,60 +93,24 @@ foreach ($CategoryCircles as $CategoryCircle){
                             <div class="col-md-12"></div><br><br>
                             <div class="col-md-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" name="citizen_show" type="hidden" value="0">
-                                    <input class="form-check-input" :checked="{{$item->citizen_show}}"  type="checkbox" id="citizen_show"
-                                           name="citizen_show" v-model="citizen_show">
+                                    {{--                                    <input class="form-check-input" name="citizen_show" type="hidden" value="0">--}}
+                                    <input class="form-check-input" :checked="{{$item->citizen_show}}" type="checkbox" id="citizen_show"
+                                           name="citizen_show" value="citizen_show">
                                     <label class="form-check-label" for="citizen_show">
                                         غير مستفيد من مشاريع المركز
                                     </label>
                                 </div>
                             </div>
                             <div class="col-md-12"></div>
-                            <div class="col-md-12">
-
-                                <div v-if="citizen_show">
-                                    <hr>
-                                    <div v-cloak class="form-group">
-                                        <label for="code">رسالة تأكيد الإرسال لغير المستفيد</label>
-                                        <textarea class="form-control" id="details" name="citizen_msg">
-                {{$item->citizen_msg}}
-            </textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>اقصى مدة للرد على غير المستفيد</label>
-                                        <input type="number" class="form-control" placeholder="المدة" name="citizen_wait"
-                                               value="{{$item->citizen_wait}}">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12"></div>
                             <div class="col-md-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" name="benefic_show" type="hidden" value="0">
-                                    <input class="form-check-input" :checked="{{$item->benefic_show}}"  type="checkbox" id="benefic_show"
-                                           name="benefic_show" v-model="benefic_show">
-                                    <label class="form-check-label" for="benefic_show">
+                                    <input class="form-check-input" :checked="{{$item->benefic_show}}" name="benefic_show" type="hidden" value="0">
+                                    <input class="form-check-input" type="checkbox" id="benefic_show"
+                                           name="citizen_show" value="benefic_show">
+                                    <label class="form-check-label" for="citizen_show">
 
                                         مستفيد من مشاريع المركز
                                     </label>
-                                </div>
-                            </div>
-                            <div class="col-md-12"></div>
-                            <div class="col-md-12">
-
-                                <div v-if="benefic_show">
-                                    <hr>
-                                    <div v-cloak class="form-group">
-                                        <label for="code">رسالة تأكيد الإرسال للمستفيد</label>
-                                        <textarea class="form-control" id="details" name="benefic_msg">
-                           {{$item->benefic_msg}}
-                         </textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>اقصى مدة للرد على المستفيد</label>
-                                        <input type="number" class="form-control" placeholder="المدة" name="benefic_wait"
-                                               value="{{$item->benefic_wait}}">
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -171,7 +135,7 @@ foreach ($CategoryCircles as $CategoryCircle){
                         <tr>
                             <th style="max-width: 100px;word-break: normal;">الفئة الرئيسية</th>
                             <th style="max-width: 100px;word-break: normal;">الفئة الفرعية</th>
-                            <th style="max-width: 100px;word-break: normal;">نوع الإجراء</th>
+                            <th colspan="2" style="max-width: 100px;word-break: normal;">نوع الإجراء</th>
                             @foreach($circles as $circle)
                                 <th style="max-width: 100px;word-break: normal;">{{$circle->name}}</th>
                             @endforeach
@@ -179,12 +143,17 @@ foreach ($CategoryCircles as $CategoryCircle){
                         </thead>
                         <tbody>
                         <tr>
-                            <td  colspan="1" rowspan="5" scope="col" style="word-break: normal;" id="maincat">{{$name}}</td>
-                            <td  colspan="1" rowspan="5" scope="col" style="word-break: normal;" id="subcat">{{$item->name}}</td>
+                            <td  colspan="1" rowspan="6" scope="col" style="word-break: normal;" id="maincat">{{$name}}</td>
+                            <td  colspan="1" rowspan="6" scope="col" style="word-break: normal;" id="subcat">{{$item->name}}</td>
                         </tr>
                         @foreach($procedureTypes as $procedureType)
                             <tr>
-                                <td style="word-break: normal;" id="{{$procedureType->id}}">{{$procedureType->name}}</td>
+                                @if($procedureType->id != 2 && $procedureType->id != 3)
+                                    <td colspan="2" style="word-break: normal;" id="{{$procedureType->id}}">{{$procedureType->name}}</td>
+                                @else
+                                    <td  style="word-break: normal;">الجهات المختصة بمعالجة الشكوى</td>
+                                    <td  style="word-break: normal;" id="{{$procedureType->id}}">{{$procedureType->name}}</td>
+                                @endif
                                 @foreach($circles as $circle)
                                     <td  style="text-align:center;max-width: 100px;word-break: normal;">
                                         <input type="checkbox" name="category_circle[]" value="{{$procedureType->id.'_'.$circle->id}}" @if(in_array($procedureType->id.'_'.$circle->id,$Cat)) {{'checked'}} @endif>
@@ -237,5 +206,22 @@ foreach ($CategoryCircles as $CategoryCircle){
         $('#main_category_id').change(function () {
             $('#main_suggest_id').val($('#main_category_id').val());
         });
+    </script>
+    <script>
+        const table = document.querySelector('table');
+
+        let headerCell = null;
+
+        for (let row of table.rows) {
+            const firstCell = row.cells[0];
+
+            if (headerCell === null || firstCell.innerText !== headerCell.innerText) {
+                headerCell = firstCell;
+            } else {
+                headerCell.rowSpan++;
+                headerCell.style = "vertical-align: middle";
+                firstCell.remove();
+            }
+        }
     </script>
 @endsection

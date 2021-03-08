@@ -20,7 +20,6 @@
     <div class="col-sm-12">
     <h4 class="wow bounceIn" style="margin-top:50px;text-align:center;">
         @if($citizen)
-
             @if($projects)
                 @if($projects->first())
                     أنت مستفيد من مشاريعنا يرجى اختيار مشروع لتقديم طلبك
@@ -71,6 +70,7 @@
     <div class="row">
 <div class="col-sm-3"></div>
         <div class="col-sm-6 text-center">
+
             @if($projects)
                 @if($projects->first())
                     <select style="text-align:center; margin-bottom:20px;" class="form-control input" name="project_id">

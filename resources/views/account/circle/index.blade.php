@@ -46,14 +46,15 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     @foreach($items as $a)
                         <tr>
                         <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{$a->id}}</td>
                         <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{$a->name}}</td>
-                        <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">1</td>
+                        <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{count($a->account)}}</td>
 
                         <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                            <a class="btn btn-xs btn-info" href=""> الموظفين</a>
+                            <a class="btn btn-xs btn-info" href="/account/account?circles={{$a->id}}&theaction=search"> الموظفين</a>
 
                             <a class="btn btn-xs btn-info" href="/account/circle/select-category/{{$a->id}}"> فئات الشكاوى والاقتراحات</a>
                             @if(check_permission('تعديل مستوى إداري'))

@@ -19,15 +19,14 @@
 
     <div class="row">
         <div class="col-sm-12">
-            <form method="post" action="/account/events">
+            <form method="post" action="/account/events" autocomplete="off">
                 @csrf
-
                 <div class="form-group row">
                     <div class="col-sm-2">
-                        <label for="event_name" class="col-form-label">طبيعة الاجازة: </label>
+                        <label for="event_name" class="col-form-label">طبيعة الإجازة: </label>
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" value="" id="event_name" name="event_name">
+                        <input type="text" class="form-control" value="" id="event_name" name="event_name" autocomplete="off">
                     </div>
                 </div>
 
@@ -36,7 +35,7 @@
                         <label for="start_date" class="col-form-label"> من تاريخ:</label>
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control datepicker" value="" id="start_date" name="start_date" placeholder="يوم / شهر / سنة">
+                        <input type="text" class="form-control datepicker" value="" id="start_date" name="start_date" autocomplete="off" placeholder="يوم / شهر / سنة">
                     </div>
                 </div>
 
@@ -45,7 +44,7 @@
                         <label for="end_date" class="col-form-label"> الي تاريخ:</label>
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control datepicker" value="" id="end_date" name="end_date" placeholder="يوم / شهر / سنة">
+                        <input type="text" class="form-control datepicker" value="" id="end_date" name="end_date" placeholder="يوم / شهر / سنة" autocomplete="off">
 
                     </div>
                 </div>
@@ -69,31 +68,31 @@
 
     <div class="row">
         <div class="col-md-12">
-            <form class="form-inline">
+            <form class="form-inline" autocomplete="off">
                 <div class="row" style="margin-bottom: 10px;margin-top: 30px;margin-right: 0px;">
-                <div class="col-sm-4 adv-searchh" style="margin-bottom: 10px;margin-top:26px;">
-
+                    <div class=" col-sm-3 adv-searchh" style="margin-bottom: 10px;margin-top:26px;">
                     <input type="text" class="form-control" value="{{old("event_name")}}" id="event_name" name="event_name"
-                           placeholder="طبيعة الإجازة">
-
-                </div>
-                <div class="col-sm-3 adv-searchh">
+                           placeholder="طبيعة الإجازة" autocomplete="off">
+                    </div>
+                    <div class="col-sm-3 adv-searchh">
                     <label for="start_date" class="col-form-label"> من تاريخ</label>
-
                     <input type="text" class="form-control datepicker" value="{{old("start_date")}}" id="start_date"
-                           name="start_date" placeholder="يوم / شهر / سنة">
+                           name="start_date" placeholder="يوم / شهر / سنة" autocomplete="off">
                 </div>
-                <div class="col-sm-3 adv-searchh">
+                    <div class="col-sm-3 adv-searchh">
                     <label for="end_date" class="col-form-label"> الى تاريخ</label>
 
                     <input type="text" class="form-control datepicker" value="{{old("end_date")}}" id="end_date" name="end_date"
-                           placeholder="يوم / شهر / سنة">
+                           placeholder="يوم / شهر / سنة" autocomplete="off">
 
                 </div>
-                <button type="submit" name="theaction" value="search" style="width:70px;margin-left: 12px;margin-top:24px;"
-                        class="btn btn-primary adv-searchh">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>بحث
-                </button>
+                    <div  class="col-sm-3 adv-searchh">
+                        <button type="submit" name="theaction" value="search" style="width:70px;margin-left: 12px;margin-top:24px;"
+                                class="btn btn-primary">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>بحث
+                        </button>
+                    </div>
+
             </div>
             </form>
         </div>
@@ -109,10 +108,10 @@
 
                     <tr>
                         <th style="max-width: 30px;word-break: normal;">#</th>
-                        <th style="max-width: 100px;word-break: normal;">طبيعة الاجازة</th>
+                        <th style="max-width: 100px;word-break: normal;">طبيعة الإجازة</th>
                         <th style="max-width: 100px;word-break: normal;">من تاريخ</th>
                         <th style="max-width: 100px;word-break: normal;">الى تاريخ</th>
-                        <th style="word-break: normal;">التفاصيل ذات العلاقةبالاجازة</th>
+                        <th style="word-break: normal;">التفاصيل ذات العلاقةبالإجازة</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -151,10 +150,10 @@
                 <thead>
                 <tr>
                     <th style="max-width: 30px;word-break: normal;">#</th>
-                    <th style="max-width: 100px;word-break: normal;">طبيعة الاجازة</th>
+                    <th style="max-width: 100px;word-break: normal;">طبيعة الإجازة</th>
                     <th style="max-width: 100px;word-break: normal;">من تاريخ</th>
                     <th style="max-width: 100px;word-break: normal;">الى تاريخ</th>
-                    <th style="word-break: normal;">التفاصيل ذات العلاقة بالاجازة</th>
+                    <th style="word-break: normal;">التفاصيل ذات العلاقة بالإجازة</th>
                 </tr>
                 </thead>
             </table>

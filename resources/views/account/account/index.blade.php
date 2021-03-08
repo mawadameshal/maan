@@ -21,8 +21,7 @@
         <div class="row" style="margin-bottom: 30px;">
             <div class="col-md-12">
               <form class="form-inline">
-
-                   <div class="form-group adv-searchh" style="margin-left: 20px;">
+                  <div class="form-group adv-searchh" style="margin-left: 20px;">
                 <select name="account_id" class="form-control" style="width: 270px;">
                     <option value="" selected>اسم المستخدم </option>
                     @foreach($accounts as $account)

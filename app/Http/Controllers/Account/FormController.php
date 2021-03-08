@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Account;
 ;
 
+use App\AccountProjects;
+use App\CategoryCircles;
 use App\Form_status;
 use App\Form_type;
 use App\Http\Requests\Form_responseRequest;
 use App\Project_status;
+use App\Recommendation;
 use App\Sent_type;
 use App\User;
 use Carbon\Carbon;
@@ -106,9 +109,9 @@ class FormController extends BaseController
     public function changecategory($id, Request $request)
     {
 
-        $item = Form::whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->with('account_projects')->where('to_edit',1)->pluck('projects.id'))
+        $item = Form::whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->with('account_projects')->pluck('projects.id'))
             ->whereIn('category_id', Account::find(auth()->user()->account->id)->circle->category()
-                ->with('circle_categories')->where('to_edit',1)->pluck('categories.id'))
+                ->with('circle_categories')->pluck('categories.id'))
             ->find($id);
         if ($item == NULL) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
@@ -149,51 +152,102 @@ class FormController extends BaseController
     public function clarification_from_citizian($id, Request $request)
     {
 
-        $item = Form::whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->with('account_projects')->where('to_edit',1)->pluck('projects.id'))
-            ->whereIn('category_id', Account::find(auth()->user()->account->id)->circle->category()
-                ->with('circle_categories')->where('to_edit',1)->pluck('categories.id'))
+        $item = Form::whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->with('account_projects')->pluck('projects.id'))
             ->find($id);
+
         if ($item == NULL) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
             return redirect("/account/form");
         }
 
+
+
+
         if ($request['need_clarification']){
 
-            $item->reformulate_content =  $request['reformulate_content'];
-            $item->need_clarification = $request['need_clarification'];
-            $item->have_clarified = $request['have_clarified'];
-            $item->reason_lack_clarification = $request['reason_lack_clarification'];
-            $item->reprocessing = $request['reprocessing'];
-            $item->user_change_content_id = \auth()->user()->id;
+            $item->need_clarification = $request["need_clarification"] ?? $item->need_clarification;
+            $item->have_clarified = $request['have_clarified'] ?? $item->have_clarified;
+            $item->reprocessing = $request['reprocessing'] ?? $item->reprocessing;
+            $item->reformulate_content =  $request['reformulate_content'] ?? $item->reformulate_content;
+            $item->user_change_content_id = auth()->user()->account->id ?? $item->user_change_content_id;
+            $item->reason_lack_clarification = $request['reason_lack_clarification'] ?? $item->reason_lack_clarification;
+            $item->user_change_content_id = auth()->user()->account->id ?? $item->user_change_content_id;
+            $item->reprocessing_recommendations = $request['reprocessing_recommendations'] ?? $item->reprocessing_recommendations;
+            $item->user_reprocessing_recommendations_id = auth()->user()->account->id ?? $item->user_reprocessing_recommendations_id;
             $item->save();
 
             if(!empty($request['reason_lack_clarification'])){
 
-                $theform = $item;
-                if ($theform->project->account_projects->first() && $theform->category->circle_categories->first()) {
-                    $accouts_ids_in_circle = Account::WhereIn('circle_id', $theform->category->circle_categories->where('to_notify', 1)
-                        ->pluck('circle_id')->toArray())->pluck('id')->toArray();
-                    $accouts_ids_in_project = $theform->project->account_projects->where('to_notify', 1)
-                        ->pluck('account_id')->toArray();
-                    $accouts_ids = array_merge($accouts_ids_in_circle, $accouts_ids_in_project);
+                $categoryCircles_users1 = $auth_circle_users = array();
 
-                    $users_ids = Account::find($accouts_ids)->pluck('user_id');
-                    $circle_ids = Account::find($accouts_ids)->pluck('circle_id');
+                $categoryCircles = CategoryCircles::where('category' ,'=', $item->category->id)
+                    ->get();
 
+                $userinprojects = AccountProjects::select('rate','account_id')->where('project_id','=',$item->project_id)
+                    ->pluck('rate','account_id')->toArray();
 
-
-                    for ($i = 0; $i < count($users_ids); $i++) {
-
-                        if($circle_ids[$i] == 4){
-                            User::find($users_ids[$i])->account->links->contains(\App\Link::where('title', '=', 'الإشعارات')->first()->id);
-                            NotificationController::insert(['user_id' => $users_ids[$i], 'type' => 'موظف','form_id' => $theform->id, 'title' => 'تنبيه بوجود اقتراح / شكوى لا يمكن الاستيضاح عن مضمونه/ا', 'link' => "/citizen/form/show/" . $theform->citizen->id_number . "/$theform->id"]);
-                        }
-
+                foreach ($categoryCircles as $categoryCircle){
+                    if($categoryCircle->procedure_type == 5){
+                        array_push($categoryCircles_users1,$categoryCircle->circle);
                     }
                 }
 
+                foreach ($userinprojects as $key=>$userinproject){
+                    if(in_array($userinproject,$categoryCircles_users1)){
+                        array_push($auth_circle_users,$key);
+                    }
 
+                }
+
+                foreach($auth_circle_users as $AccountProjects_user){
+                    $user = Account::find($AccountProjects_user);
+                    NotificationController::insert(['user_id' => $user->user_id, 'type' => 'موظف','form_id' => $item->id, 'title' => 'تنبيه بوجود اقتراح / شكوى لا يمكن الاستيضاح عن مضمونه/ا', 'link' => "/citizen/form/show/" . $item->citizen->id_number . "/$item->id"]);
+                }
+            }
+        }
+
+        if(!empty($request['reprocessing_recommendations'])){
+            $item->need_clarification = $request["need_clarification"] ?? $item->need_clarification;
+            $item->have_clarified = $request['have_clarified'] ?? $item->have_clarified;
+            $item->reprocessing = $request['reprocessing'] ?? $item->reprocessing;
+            $item->reformulate_content =  $request['reformulate_content'] ?? $item->reformulate_content;
+            $item->user_change_content_id = auth()->user()->account->id ?? $item->user_change_content_id;
+            $item->reason_lack_clarification = $request['reason_lack_clarification'] ?? $item->reason_lack_clarification;
+            $item->user_change_content_id = auth()->user()->account->id ?? $item->user_change_content_id;
+            $item->reprocessing_recommendations = $request['reprocessing_recommendations'] ?? $item->reprocessing_recommendations;
+            $item->user_reprocessing_recommendations_id = auth()->user()->account->id ?? $item->user_reprocessing_recommendations_id;
+            $item->save();
+
+            $recommendations = new Recommendation();
+            $recommendations->form_id = $item->id;
+            $recommendations->user_id = auth()->user()->id;
+            $recommendations->recommendations_content = $request['reprocessing_recommendations'];
+            $recommendations->save();
+
+            $categoryCircles_users1 = $auth_circle_users = array();
+
+            $categoryCircles = CategoryCircles::where('category' ,'=', $item->category->id)
+                ->get();
+
+            $userinprojects = AccountProjects::select('rate','account_id')->where('project_id','=',$item->project_id)
+                ->pluck('rate','account_id')->toArray();
+
+            foreach ($categoryCircles as $categoryCircle){
+                if($categoryCircle->procedure_type == 2){
+                    array_push($categoryCircles_users1,$categoryCircle->circle);
+                }
+            }
+
+            foreach ($userinprojects as $key=>$userinproject){
+                if(in_array($userinproject,$categoryCircles_users1)){
+                    array_push($auth_circle_users,$key);
+                }
+
+            }
+
+            foreach($auth_circle_users as $AccountProjects_user){
+                $user = Account::find($AccountProjects_user);
+                NotificationController::insert(['user_id' => $user->user_id, 'type' => 'موظف','form_id' => $item->id, 'title' => 'تنبيه بإعادة معالجة الاقتراح/الشكوى', 'link' => "/citizen/form/show/" . $item->citizen->id_number . "/$item->id"]);
             }
         }
 
@@ -615,9 +669,9 @@ class FormController extends BaseController
 
     public function terminateform($id)
     {
-        $form = Form::whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->with('account_projects')->where('to_stop',1)->pluck('projects.id'))
+        $form = Form::whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->with('account_projects')->pluck('projects.id'))
             ->whereIn('category_id', Account::find(auth()->user()->account->id)->circle->category()
-                ->with('circle_categories')->where('to_stop',1)->pluck('categories.id'))
+                ->with('circle_categories')->pluck('categories.id'))
             ->find($id);
         if ($form == NULL) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
@@ -629,9 +683,9 @@ class FormController extends BaseController
 
         $theform = $form;
         if ($theform->project->account_projects->first() && $theform->category->circle_categories->first()) {
-            $accouts_ids_in_circle = Account::WhereIn('circle_id', $theform->category->circle_categories->where('to_notify', 1)
+            $accouts_ids_in_circle = Account::WhereIn('circle_id', $theform->category->circle_categories
                 ->pluck('circle_id')->toArray())->where('id','!=',auth()->user()->id)->pluck('id')->toArray();
-            $accouts_ids_in_project = $theform->project->account_projects->where('to_notify', 1)
+            $accouts_ids_in_project = $theform->project->account_projects
                 ->where('account_id','!=',auth()->user()->id)->pluck('account_id')->toArray();
             $accouts_ids = array_merge($accouts_ids_in_circle, $accouts_ids_in_project);
 
@@ -649,9 +703,9 @@ class FormController extends BaseController
 
     public function allowform($id)
     {
-        $form =Form::whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->with('account_projects')->where('to_stop',1)->pluck('projects.id'))
+        $form =Form::whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->with('account_projects')->pluck('projects.id'))
             ->whereIn('category_id', Account::find(auth()->user()->account->id)->circle->category()
-                ->with('circle_categories')->where('to_stop',1)->pluck('categories.id'))
+                ->with('circle_categories')->pluck('categories.id'))
             ->find($id);
         if ($form == NULL) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
@@ -748,11 +802,13 @@ class FormController extends BaseController
 
     }
 
-    public function destroy_from_citizian(Request $request)
+    public function confirm_destroy_from_citizian(Request $request)
     {
-        $item = Form::whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->with('account_projects')->where('to_edit',1)->pluck('projects.id'))
+        $item = Form::whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->with('account_projects')->pluck('projects.id'))
             ->whereIn('category_id', Account::find(auth()->user()->account->id)->circle->category()
-                ->with('circle_categories')->where('to_edit',1)->pluck('categories.id'))->find($request['id']);
+                ->with('circle_categories')->pluck('categories.id'))->find($request['id']);
+
+        print_r($item);exit();
 
         if ($item == NULL) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
@@ -789,9 +845,80 @@ class FormController extends BaseController
         }
 
         $item->deleted_at = Carbon::now();
+        $item->user_recommendations_for_deleting_id = auth()->user()->account->id;
+        $item->save();
+
+        $categoryCircles_users1 = $auth_circle_users = array();
+
+        $categoryCircles = CategoryCircles::where('category' ,'=', $item->category->id)
+            ->get();
+
+        $userinprojects = AccountProjects::select('rate','account_id')->where('project_id','=',$item->project_id)
+            ->pluck('rate','account_id')->toArray();
+
+        foreach ($categoryCircles as $categoryCircle){
+            if($categoryCircle->procedure_type == 2){
+                array_push($categoryCircles_users1,$categoryCircle->circle);
+            }
+        }
+
+        foreach ($userinprojects as $key=>$userinproject){
+            if(in_array($userinproject,$categoryCircles_users1)){
+                array_push($auth_circle_users,$key);
+            }
+
+        }
+
+        foreach($auth_circle_users as $AccountProjects_user){
+            $user = Account::find($AccountProjects_user);
+            NotificationController::insert(['user_id' => $user->user_id, 'type' => 'موظف','form_id' => $item->id, 'title' => 'تنبيه بإتمام عملية الحذف ', 'link' => "/citizen/form/show/" . $item->citizen->id_number . "/$item->id"]);
+        }
+//        Session::flash("msg", "تمت عملية الحذف بنجاح");
+        return Response(['success' => true,'msg'=>"تمت تأكيد عملية الحذف بنجاح"]);
+
+    }
+
+    public function destroy_from_citizian(Request $request)
+    {
+        $item = Form::whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->with('account_projects')->pluck('projects.id'))
+            ->whereIn('category_id', Account::find(auth()->user()->account->id)->circle->category()
+                ->with('circle_categories')->pluck('categories.id'))->find($request['id']);
+
+        if ($item == NULL) {
+            Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
+            return redirect("/account/form");
+        }
+
+        $item->confirm_deleting = Carbon::now();
         $item->deleted_by = Auth::id();
         $item->deleted_because = $request['reason'];
         $item->save();
+
+        $categoryCircles_users1 = $auth_circle_users = array();
+
+        $categoryCircles = CategoryCircles::where('category' ,'=', $item->category->id)
+            ->get();
+
+        $userinprojects = AccountProjects::select('rate','account_id')->where('project_id','=',$item->project_id)
+            ->pluck('rate','account_id')->toArray();
+
+        foreach ($categoryCircles as $categoryCircle){
+            if($categoryCircle->procedure_type == 5){
+                array_push($categoryCircles_users1,$categoryCircle->circle);
+            }
+        }
+
+        foreach ($userinprojects as $key=>$userinproject){
+            if(in_array($userinproject,$categoryCircles_users1)){
+                array_push($auth_circle_users,$key);
+            }
+
+        }
+
+        foreach($auth_circle_users as $AccountProjects_user){
+            $user = Account::find($AccountProjects_user);
+            NotificationController::insert(['user_id' => $user->user_id, 'type' => 'موظف','form_id' => $item->id, 'title' => 'تنبيه بوجود اقتراح/ شكوى تم حذفها من حساب موظف', 'link' => "/citizen/form/show/" . $item->citizen->id_number . "/$item->id"]);
+        }
 //        Session::flash("msg", "تمت عملية الحذف بنجاح");
         return Response(['success' => true,'msg'=>"تمت عملية الحذف بنجاح"]);
 

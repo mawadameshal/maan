@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Form;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\Controller;
@@ -114,10 +116,19 @@ class AppendixController extends Controller
 
      }
 
+    public function showappendix($id) {
+
+        $item = Appendix::find($id);
+        if ($item)
+            return view("account.appendix.itemsfiles", compact( 'item'));
+
+    }
+
     public function showfiles($id)
     {
         $item = Appendix::find($id);
         if ($item){
+
             $file= public_path(). "/uploads/appendix/".$item->appendix_file;
             return response()->download($file);
         }

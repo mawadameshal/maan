@@ -8,11 +8,6 @@
         <div class="col-sm-12">
             <form>
                 <div class="row">
-{{--                    <div class="col-sm-4">--}}
-{{--                        <input type="text" class="form-control" name="q" value="{{request('q')}}"--}}
-{{--                               placeholder="ابحث في عنوان الاشعار"/>--}}
-{{--                    </div>--}}
-
                     <div class="col-sm-4">
                         <button type="button" style="width:110px;" class="btn btn-primary adv-search-btn">
                         <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -23,17 +18,22 @@
                 <br>
                 <div class="row">
                     <div class="col-sm-3 adv-search">
-                        <select name="category_name" class="form-control">
+                        <select name="notification_type" class="form-control">
                             <option value="" >نوع الإشعار</option>
-                            <option value="0" >1</option>
-                            <option value="1">2</option>
+
+                            @foreach($notifications as $notification)
+                                <option
+                                    @if(request('notification_type')===''.$notification->title)selected
+                                    @endif
+                                    value="{{$notification->title}}">{{$notification->title}}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-sm-3 adv-search">
-                        <select name="category_name" class="form-control">
+                        <select name="user_name" class="form-control">
                             <option value="" >نوع حساب مرسل الإشعار</option>
-                            <option value="0" >1</option>
-                            <option value="1">2</option>
+                            <option value="مواطن">مواطن</option>
+                            <option value="موظف">موظف</option>
                         </select>
                     </div>
                     <div class="col-sm-3 adv-search">
@@ -51,33 +51,29 @@
                         </select>
                     </div>
                     <div class="col-sm-3 adv-search">
-                        <select name="category_name" class="form-control">
+                        <select name="notification_status" class="form-control">
                             <option value="" >حالة الإشعار</option>
-                            <option value="0" >1</option>
-                            <option value="1">2</option>
+                            <option value="0" >مقروء</option>
+                            <option value="1">غير مقروء</option>
                         </select>
                     </div>
                 </div>
                 <div class="row">
-
                     <div class="col-sm-3 adv-search">
-                        <label for="from_date">تاريخ محدد:</label>
+                        <label for="datee">تاريخ محدد:</label>
                         <input type="text" class="form-control datepicker" name="datee" value="{{request('datee')}}"
                                placeholder="يوم / شهر / سنة"/>
                     </div>
-
                     <div class="col-sm-3 adv-search">
                         <label for="from_date">من تاريخ: </label>
                         <input type="text" class="form-control datepicker" name="from_date" value="{{request('from_date')}}"
                                placeholder="يوم / شهر / سنة"/>
                     </div>
-
                     <div class="col-sm-3 adv-search">
                         <label for="to_date">إلى تاريخ:</label>
-                        <input type="text" class="form-control datepicker" name="to_date" value="{{request('to_date')}}"
+                        <input type="text"  class="form-control datepicker" name="to_date" value="{{request('to_date')}}"
                                placeholder="يوم / شهر / سنة"/>
                     </div>
-
                     <div class="col-sm-3 adv-search">
                         <button type="submit" name="theaction" title="بحث" style="margin-top: 23px;width:110px;" value="search"
                                 class="btn btn-primary">
@@ -94,7 +90,7 @@
     <br>
     <div class="mt-3"></div>
     @if($items)
-    @if($items->count()>0)
+        @if($items->count()>0)
         <br/>
         <div class="table-responsive">
             <table class="table table-hover table-striped">
@@ -113,8 +109,7 @@
                 <tbody>
                 @foreach($items as $a)
 
-                    @php
-
+                    <?php
 
                         $array = explode('/',  $a->link);
 
@@ -122,7 +117,7 @@
 
                         $form = App\Form::find($id);
 
-                    @endphp
+                    ?>
 
                     <tr>
                         <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{$a->id}}</td>

@@ -10,7 +10,7 @@ class Circle extends Model
     protected $table = "circles";
     protected $fillable =['name'];
 
-    public function Account(){
+    public function account(){
         return $this->hasMany('App\Account');
     }
     public function links()

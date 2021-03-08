@@ -48,7 +48,7 @@
     <div class="row">
         <div class="col-md-12">
             @if($project_id != 1)
-                <h1 class="wow bounceIn" style="color:#af0922;margin-top:120px;"> أهلاً بك عزيزي {{$citizen["first_name"]}}</h1>
+                <h1 class="wow bounceIn" style="color:#af0922;margin-top:120px;"> أهلاً بك عزيزي {{$citizen["full_name"]}}</h1>
             @else
                 <h1 class="wow bounceIn" style="color:#af0922;margin-top:120px;"> أهلاً بك عزيزي المواطن</h1>
             @endif
@@ -186,9 +186,16 @@
                                         <label for="type_name"  class="col-sm-4 col-form-label">فئة مقدم الشكوى</label>
                                     @elseif($type == 2)
                                         <label for="type_name"  class="col-sm-4 col-form-label">فئة مقدم الاقتراح</label>
-
                                     @endif
-                                    <input name="type_name" value="@if($type=='0'){{'مستفيد'}}@else{{'غير مستفيد'}}@endif" type="text" readonly class="form-control" >
+
+                                    <?php
+                                        $project_arr = array();
+                                        foreach($citizen->projects as $project){
+                                            array_push($project_arr,$project->id);
+                                        }
+                                    ?>
+
+                                    <input name="type_name" value="@if(in_array($project_id,$project_arr)){{'مستفيد'}}@else{{'غير مستفيد'}}@endif" type="text" readonly class="form-control" >
                                 </div>
 
                                 <div class="col-sm-6">
@@ -366,8 +373,8 @@
                                         <label for="category_id"  class="col-sm-4 col-form-label">فئة الشكوى</label>
                                         <select id="category" class="form-control {{($errors->first('category_id') ? " form-error" : "")}}" id="sel1" name="category_id">
                                             <option value="">اختر فئة الشكوى </option>
+                                            {{$project_id}}
                                             @foreach($category as $cat)
-                                                @if($cat->id != 1)
                                                     @if($project_id>1)
                                                         @if($cat->benefic_show==0)
                                                             @continue
@@ -386,7 +393,6 @@
                                                                     @if(old("category_id")==$cat->id)selected @endif>{{$cat->name}}</option>
                                                         @endif
                                                     @endif
-                                                @endif
                                             @endforeach
                                         </select>
                                         {!! $errors->first('category_id', '<p class="help-block" style="color:red;">:message</p>') !!}
@@ -402,7 +408,7 @@
                                                     id="sel1" name="category_id">
                                                 <option value=""> اختر فئة الاقتراح</option>
                                                 @foreach($category as $cat)
-                                                    @if($cat->id != 1 && $cat->id != 2)
+
                                                         @if($project_id>1)
                                                             @if($cat->benefic_show==0)
                                                                 @continue
@@ -421,7 +427,6 @@
                                                                         @if(old("category_id")==$cat->id)selected @endif>{{$cat->name}}</option>
                                                             @endif
                                                         @endif
-                                                    @endif
                                                 @endforeach
                                             </select>
                                             {!! $errors->first('category_id', '<p class="help-block" style="color:red;">:message</p>') !!}
@@ -464,24 +469,7 @@
                             </div>
 
                             <br>
-                            <hr>
-                            @if($type == 1 && !auth()->user())
-                                <div class="form-group row">
-                                    <div class="col-sm-10">
-                                        <label for="show_data" style="text-align: justify;"  class="col-form-label">هل ترغب في مشاركة معلوماتك الأساسية (الاسم، رقم الهوية، معلومات التواصل) مع الجهات المختصة بالنظر في شكواك داخل المركز مع العلم أنه سيتم التعامل مع معلوماتك بسرية تامة وسوف يسهل على المركز الرجوع لك وإبلاغك بنتيجة معالجة الشكوى؟</label>
-                                    </div>
-                                    <div class="col-sm-2">
-                                        <select class="form-control {{($errors->first('show_data') ? " form-error" : "")}}" id="show_data" name="show_data">
-                                            <option value="">اختر</option>
-                                            <option value="1">نعم</option>
-                                            <option value="0">لا</option>
 
-                                        </select>
-                                    </div>
-                                </div>
-                            @endif
-
-                            <br><br>
                         </form>
                     </div>
                 </div>
@@ -527,7 +515,7 @@
              setTimeout( function () {
                  $('#form2').submit();
                  console.log("submitted 2");
-             }, 200);
+             }, 100);
 
 
          });
