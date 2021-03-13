@@ -8,7 +8,7 @@ class Form_follow extends Model {
 	//
 	protected $table = "form_follows";
 	protected $fillable = ['form_id', 'citizen_id', 'solve'
-		, 'evaluate', 'notes', 'datee'];
+		, 'evaluate', 'notes', 'datee','account_id','follow_form_status'];
 
 	protected $appends = ['from_admin', 'username'];
 
@@ -17,6 +17,10 @@ class Form_follow extends Model {
 	}
 	public function citizen() {
 		return $this->belongsTo('App\Citizen');
+	}
+
+	public function account() {
+		return $this->belongsTo('App\Account');
 	}
 
 	public function getFromAdminAttribute() {

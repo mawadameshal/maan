@@ -20,6 +20,10 @@ class Form_response extends Model {
 		return $this->belongsTo('App\Account');
 	}
 
+    public function confirm_account() {
+        return $this->belongsTo('App\Account');
+    }
+
 	public function getFromAdminAttribute() {
 		return true;
 	}

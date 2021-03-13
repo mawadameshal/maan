@@ -255,34 +255,35 @@ class CategoryController extends BaseController
     {
 
         $isExists = auth()->user()->account->circle->category()->where("name",$request["name"])->where("categories.id","!=",$id)->count();
+
         if($isExists)
         {
             Session::flash("msg","e:القيمة المدخلة موجودة مسبقاً");
             return redirect("/account/category/$id/edit");
         }
         $item = Category::find($id);
+
+
 //        if ($item == NULL || $item->id ==1  ||$item->id == 2) {
         if ($item == NULL) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
             return redirect("/account/category");
         }
-        if($request['citizen_show']=='on')
-            $request['citizen_show']=1;
-        else
-            $request['citizen_msg']=' ';
-        if($request['benefic_show']=='on')
-            $request['benefic_show']=1;
-        else
-            $request['benefic_msg']=' ';
 
-        if($request['benefic_show']==1)
-            $this->validate($request,[
-                'benefic_msg'=>'required',
-            ]);
-        if($request['citizen_show']==1)
-            $this->validate($request,[
-                'citizen_msg'=>'required',
-            ]);
+
+//        if($request['citizen_show']==1){
+//            $request['citizen_show']=1;
+//        } else{
+//            $request['citizen_msg']=0;
+//        }
+//
+//
+//        if($request['benefic_show']==1) {
+//            $request['benefic_show'] = 1;
+//        } else {
+//            $request['benefic_msg'] = 0;
+//        }
+
         $item->update($request->all());
 
         CategoryCircles::where(['category'=>$id])->delete();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Account;
 ;
 
 use App\AccountProjects;
+use App\appendix;
 use App\CategoryCircles;
 use App\Form_status;
 use App\Form_type;
@@ -14,6 +15,7 @@ use App\Sent_type;
 use App\User;
 use Carbon\Carbon;
 use http\Env\Response;
+use Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -75,33 +77,165 @@ class FormController extends BaseController
     }
 
     public function change_response_and_update_form_data($id , Request $request){
-
-        $data = $request->validate([
-            'form_file' => 'sometimes|nullable|max:6400|mimes:jpeg,bmp,png,gif,svg,pdf,docx,xls,xlsx,txt,File',
-        ]);
+        $form = Form::find($id);
 
         $response_type = $request->response_type ;
         $required_respond = $request->required_respond ;
         $form_data = $request->form_data ;
-        $form_file= "";
+        $form_file = "";
 
-        if ($request->hasFile('form_file')) {
-            $myfile = $request->file('form_file');
-            $filename = rand(11111, 99999) . '.' . $myfile->getClientOriginalExtension();
-            $myfile->move(public_path() . '/uploads/files/', $filename);
-            $form_file = $filename;
+
+        if($request->hasFile('form_file')){
+            $fileName = time().'.'.$request->form_file->extension();
+            $request->form_file->move(public_path('uploads/files'), $fileName);
+            $form_file=$fileName;
         }
-        $form = Form::find($id);
-        $form->update([
-            'response_type' =>  $response_type,
-            'required_respond'=>$required_respond,
-            'form_data'=>$form_data,
-            'form_file'=>$form_file,
-        ]);
 
+        $form->response_type = $response_type;
+        $form->required_respond = $required_respond;
+        $form->form_data = $form_data;
+        $form->form_file = $form_file;
         $form->save();
 
-        return back()->with('success' , 'تم تحديث البيانات بنجاح');
+
+        // add_repaly
+
+        if($request->response){
+            $form->fill(['status' => '2']);
+            $form->save();
+
+            $item = new Form_response();
+            $request['form_id'] = $id;
+            $request['datee'] = date('Y-m-d');
+            $request['account_id'] = Auth::user()->account->id;
+            $item::create($request->all());
+
+            $categoryCircles_users1 = $auth_circle_users = array();
+
+            $categoryCircles = CategoryCircles::where('category' ,'=', $form->category->id)
+                ->get();
+
+            $userinprojects = AccountProjects::select('rate','account_id')->where('project_id','=',$form->project_id)
+                ->pluck('rate','account_id')->toArray();
+
+            foreach ($categoryCircles as $categoryCircle){
+                if($categoryCircle->procedure_type == 3){
+                    array_push($categoryCircles_users1,$categoryCircle->circle);
+                }
+            }
+
+            foreach ($userinprojects as $key=>$userinproject){
+                if(in_array($userinproject,$categoryCircles_users1)){
+                    array_push($auth_circle_users,$key);
+                }
+
+            }
+
+            foreach($auth_circle_users as $AccountProjects_user){
+                $user = Account::find($AccountProjects_user);
+                NotificationController::insert(['user_id' => $user->user_id, 'type' => 'موظف','form_id' => $form->id, 'title' => 'لديك اقتراح/ شكوى جديدة بحاجة للمصادقة على الرد', 'link' => "/citizen/form/show/" . $form->citizen->id_number . "/$form->id"]);
+            }
+        }
+
+        return back()->with(['success' => true ,'msg' => "تم ارسال الرد للمصادقة بنجاح"]);
+
+    }
+
+    public function change_replay_status_feedback($id , Request $request){
+        $form = Form::find($id);
+
+        $Form_follow = new Form_follow();
+        $Form_follow->form_id=$form->id;
+        $Form_follow->citizen_id=$form->citizen_id;
+        $Form_follow->account_id=Auth::user()->account->id;;
+        $Form_follow->solve= $request['follow_form_status'];
+        $Form_follow->follow_reason_not= $request['follow_reason_not'];
+        $Form_follow->evaluate=$request['evaluate'];
+        $Form_follow->notes=$request['notes'];
+        $Form_follow->datee=date('Y-m-d');
+        $Form_follow->save();
+
+        if ($request['evaluate'] && ($request['evaluate'] == 1 || $request['evaluate'] == 2 || $request['evaluate'] == 3)){
+            $form->fill(['status' => '3']);
+            $form->save();
+        }
+            $categoryCircles_users1 = $auth_circle_users = array();
+
+            $categoryCircles = CategoryCircles::where('category' ,'=', $form->category->id)
+                ->get();
+
+            $userinprojects = AccountProjects::select('rate','account_id')->where('project_id','=',$form->project_id)
+                ->pluck('rate','account_id')->toArray();
+
+            foreach ($categoryCircles as $categoryCircle){
+                if($categoryCircle->procedure_type == 5){
+                    array_push($categoryCircles_users1,$categoryCircle->circle);
+                }
+
+                if($categoryCircle->procedure_type == 2){
+                    array_push($categoryCircles_users1,$categoryCircle->circle);
+                }
+            }
+
+            foreach ($userinprojects as $key=>$userinproject){
+                if(in_array($userinproject,$categoryCircles_users1)){
+                    array_push($auth_circle_users,$key);
+                }
+
+            }
+
+            foreach($auth_circle_users as $AccountProjects_user){
+                $user = Account::find($AccountProjects_user);
+                NotificationController::insert(['user_id' => $user->user_id, 'type' => 'موظف','form_id' => $form->id, 'title' => 'تنبيه بإتمام المهمة ', 'link' => "/citizen/form/show/" . $form->citizen->id_number . "/$form->id"]);
+            }
+
+        return back()->with(['success' => true ,'msg' => "تم حفظ التغذية الراجعة بنجاح"]);
+
+    }
+
+    public function change_confirm_and_update_form_data($id , Request $request){
+        $form = Form::find($id);
+
+        if($form->form_response){
+            $item = Form_response::where(['form_id'=>$id])->first();
+            if($item){
+                $item->objection_response = $request->optradio8;
+                $item->confirm_account_id = Auth::user()->account->id;
+                $item->confirmation_date = date('Y-m-d');
+                $item->confirmation_status = 2;
+                if($request->optradio8 == 1){
+                    $item->old_response = $request->old_response;
+                }
+                $item->save();
+
+            }
+        }
+
+        // Notifications
+        $categoryCircles_users1 = $auth_circle_users = array();
+        $categoryCircles = CategoryCircles::where('category' ,'=', $form->category->id)
+            ->get();
+        $userinprojects = AccountProjects::select('rate','account_id')->where('project_id','=',$form->project_id)
+            ->pluck('rate','account_id')->toArray();
+        foreach ($categoryCircles as $categoryCircle){
+            if($categoryCircle->procedure_type == 4){
+                array_push($categoryCircles_users1,$categoryCircle->circle);
+            }
+        }
+        foreach ($userinprojects as $key=>$userinproject){
+            if(in_array($userinproject,$categoryCircles_users1)){
+                array_push($auth_circle_users,$key);
+            }
+
+        }
+        foreach($auth_circle_users as $AccountProjects_user){
+            $user = Account::find($AccountProjects_user);
+            NotificationController::insert(['user_id' => $user->user_id, 'type' => 'موظف','form_id' => $form->id, 'title' => 'لديك اقتراح/ شكوى جديدة بحاجة لتبليغ الرد', 'link' => "/citizen/form/show/" . $form->citizen->id_number . "/$form->id"]);
+        }
+
+
+        return back()->with(['success' => true ,'msg' => "تم المصادقة بنجاح"]);
+
     }
 
 
@@ -804,11 +938,7 @@ class FormController extends BaseController
 
     public function confirm_destroy_from_citizian(Request $request)
     {
-        $item = Form::whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->with('account_projects')->pluck('projects.id'))
-            ->whereIn('category_id', Account::find(auth()->user()->account->id)->circle->category()
-                ->with('circle_categories')->pluck('categories.id'))->find($request['id']);
-
-        print_r($item);exit();
+        $item = Form::find($request['id']);
 
         if ($item == NULL) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
@@ -845,6 +975,7 @@ class FormController extends BaseController
         }
 
         $item->deleted_at = Carbon::now();
+        $item->recommendations_for_deleting = "يوصي بإتمام عملية الحذف";
         $item->user_recommendations_for_deleting_id = auth()->user()->account->id;
         $item->save();
 
@@ -873,10 +1004,57 @@ class FormController extends BaseController
             $user = Account::find($AccountProjects_user);
             NotificationController::insert(['user_id' => $user->user_id, 'type' => 'موظف','form_id' => $item->id, 'title' => 'تنبيه بإتمام عملية الحذف ', 'link' => "/citizen/form/show/" . $item->citizen->id_number . "/$item->id"]);
         }
-//        Session::flash("msg", "تمت عملية الحذف بنجاح");
         return Response(['success' => true,'msg'=>"تمت تأكيد عملية الحذف بنجاح"]);
 
     }
+
+    public function confirm_detory_reprocessing_recommendations_from_citizian(Request $request)
+    {
+        $item = Form::find($request['id']);
+        if($item->type){
+            $formtype = "الشكوى";
+        }else{
+            $formtype = "الاقتراح";
+        }
+
+        if ($item == NULL) {
+            Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
+            return redirect("/account/form");
+        }
+
+        $item->recommendations_for_deleting = "يوصي بإعادة معالجة ".$formtype." مع أخذ بعين الاعتبار التوصيات التالية:".$request['recommendations_for_deleting'];
+        $item->user_recommendations_for_deleting_id = auth()->user()->account->id;
+        $item->save();
+
+        $categoryCircles_users1 = $auth_circle_users = array();
+
+        $categoryCircles = CategoryCircles::where('category' ,'=', $item->category->id)
+            ->get();
+
+        $userinprojects = AccountProjects::select('rate','account_id')->where('project_id','=',$item->project_id)
+            ->pluck('rate','account_id')->toArray();
+
+        foreach ($categoryCircles as $categoryCircle){
+            if($categoryCircle->procedure_type == 2){
+                array_push($categoryCircles_users1,$categoryCircle->circle);
+            }
+        }
+
+        foreach ($userinprojects as $key=>$userinproject){
+            if(in_array($userinproject,$categoryCircles_users1)){
+                array_push($auth_circle_users,$key);
+            }
+
+        }
+
+        foreach($auth_circle_users as $AccountProjects_user){
+            $user = Account::find($AccountProjects_user);
+            NotificationController::insert(['user_id' => $user->user_id, 'type' => 'موظف','form_id' => $item->id, 'title' => 'تنبيه بإعادة معالجة الاقتراح/الشكوى ', 'link' => "/citizen/form/show/" . $item->citizen->id_number . "/$item->id"]);
+        }
+        return Response(['success' => true,'msg'=>"تمت تأكيد عملية الحذف بنجاح"]);
+
+    }
+
 
     public function destroy_from_citizian(Request $request)
     {
@@ -1314,6 +1492,16 @@ class FormController extends BaseController
 
         return view("account.form.itemsfiles", compact( 'form_files','item'));
 
+    }
+
+
+    public function downloadfiles($id)
+    {
+        $item = Form::find($id);
+        if ($item){
+            $file= public_path(). "/uploads/files/".$item->form_file;
+            return response()->download($file);
+        }
     }
 
 

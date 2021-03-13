@@ -78,27 +78,18 @@
                                 <label>فئة مقدم الاقتراح/ الشكوى</label>
                             </div>
                             <div class="col-md-12"></div><br><br>
-                            <div class="col-md-4">
-                                <div class="form-check">
-{{--                                    <input class="form-check-input" name="citizen_show" type="hidden" value="0">--}}
-                                    <input class="form-check-input" type="checkbox" id="citizen_show"
-                                           name="citizen_show" value="citizen_show">
-                                    <label class="form-check-label" for="citizen_show">
-                                        غير مستفيد من مشاريع المركز
-                                    </label>
-                                </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"  id="citizen_show" name="citizen_show" value="1">
+                                <label class="form-check-label" for="citizen_show">
+                                    غير مستفيد من مشاريع المركز
+                                </label>
                             </div>
-                            <div class="col-md-12"></div>
-                            <div class="col-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" name="benefic_show" type="hidden" value="0">
-                                    <input class="form-check-input" type="checkbox" id="benefic_show"
-                                           name="citizen_show" value="benefic_show">
-                                    <label class="form-check-label" for="citizen_show">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"  id="benefic_show" name="benefic_show" value="1">
+                                <label class="form-check-label" for="citizen_show">
 
-                                        مستفيد من مشاريع المركز
-                                    </label>
-                                </div>
+                                    مستفيد من مشاريع المركز
+                                </label>
                             </div>
                         </div>
 
@@ -171,6 +162,7 @@
                 citizen_show: false,
             },
         });
+
 
         function editLevel2() {
 

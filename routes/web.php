@@ -157,6 +157,7 @@ Route::post('/account/circle/select-category-post/{id}','Account\CircleControlle
 Route::post('/account/form/delete','Account\FormController@destroy')->name('delete_form');
 Route::post('/account/form/destroy_from_citizian','Account\FormController@destroy_from_citizian')->name('destroy_from_citizian');
 Route::post('/account/form/confirm_destroy_from_citizian','Account\FormController@confirm_destroy_from_citizian')->name('confirm_destroy_from_citizian');
+Route::post('/account/form/confirm_detory_reprocessing_recommendations_from_citizian','Account\FormController@confirm_detory_reprocessing_recommendations_from_citizian')->name('confirm_detory_reprocessing_recommendations_from_citizian');
 Route::resource("/account/form","Account\FormController");
 Route::get("/download_form_file/{id}","Account\FormController@download_form_file")->name('download_form_file');
 
@@ -171,6 +172,8 @@ Route::post('/account/form/clarification_from_citizian/{id}','Account\FormContro
 
 Route::post('/account/form/change_response/{id}','Account\FormController@change_response')->name('change_response');
 Route::post('/account/form/change_response_and_update_form_data/{id}','Account\FormController@change_response_and_update_form_data')->name('change_response_and_update_form_data');
+Route::post('/account/form/change_confirm_and_update_form_data/{id}','Account\FormController@change_confirm_and_update_form_data')->name('change_confirm_and_update_form_data');
+Route::post('/account/form/change_replay_status_feedback/{id}','Account\FormController@change_replay_status_feedback')->name('change_replay_status_feedback');
 Route::post('/account/form/update_form_data/{id}','Account\FormController@update_form_data')->name('update_form_data');
 
 
@@ -184,6 +187,7 @@ Route::get('/account/appendix/showappendix/{id}','Account\AppendixController@sho
 Route::get('/account/appendix/showrecommendations/{id}','Account\RecommendationsController@showrecommendations')->name('showrecommendations');
 
 Route::get('/citizen/form/showfiles/{id}','Citizen\FormController@showfiles')->name('citizenshowfiles');
+Route::get('/account/form/downloadfiles/{id}','Account\FormController@downloadfiles')->name('downloadfiles');
 /////////////////المواطن
 //اضافة النماذج
 Route::get('/citizen/form/searchbeforadd/{type}','Citizen\CitizenController@searchbyidnum');

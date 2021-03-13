@@ -65,8 +65,8 @@
                             <td style="text-align: center;">
                                 @if(Auth::user())
                                 <a target="_blank" title="عرض"
-                                                               class="btn btn-xs btn-primary"
-                                                               href="/citizen/form/show/{{$form->citizen->id_number}}/{{$form->id}}">
+                                       class="btn btn-xs btn-primary"
+                                       href="/citizen/form/show/{{$form->citizen->id_number}}/{{$form->id}}">
                                     عرض
                                 </a>
                                 @else

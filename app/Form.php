@@ -65,11 +65,11 @@ class Form extends Model {
 	}
 
 	public function form_follow() {
-		return $this->hasMany('App\Form_follow');
+		return $this->hasOne('App\Form_follow');
 	}
 
 	public function form_response() {
-		return $this->hasMany('App\Form_response');
+		return $this->hasOne('App\Form_response');
 	}
 
 	function form_file() {
