@@ -112,6 +112,7 @@ Route::get('/account/citizen/select-project/{id}','Account\CitizenController@sel
 Route::post('/account/citizen/select-project-post/{id}','Account\CitizenController@selectprojectPost');
 Route::get('/account/citizen/accept/{id}','Account\CitizenController@accept');
 Route::get('/account/citizen/formincitizen/{id}','Account\CitizenController@formincitizen');
+Route::get('/account/citizen/formincitizen1/{id}','Account\CitizenController@formincitizen1');
 Route::get('/get-citizen-data','Account\CitizenController@get_citizen_data')->name('get-citizen-data');
 Route::get('/download-citizen-file','Account\CitizenController@download_citizen_file')->name('download-citizen-file');
 Route::get('/download-sample-file','Account\MessageController@download_sample_file')->name('download-sample-file');

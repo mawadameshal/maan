@@ -471,8 +471,9 @@ class ProjectController extends BaseController
         //dd($keywords);
         $z = $id;
         $items = Project::find($z)->citizens()->getQuery()->getQuery()
-            ->select('citizens.id', 'first_name', 'father_name', 'grandfather_name', 'last_name',
+            ->select('citizens.id','first_name', 'father_name', 'grandfather_name', 'last_name',
                 'id_number', 'governorate', 'city', 'street', 'mobile',  'mobile2','email')
+               ->where('project_id','=',$id)
             ->whereRaw("true"); // i have added the 'mobile2'
                 // to display it in the citizen project view , myabe this will effict to the export of projects
 

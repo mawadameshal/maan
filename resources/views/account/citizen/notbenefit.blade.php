@@ -101,7 +101,7 @@
                     <td style="text-align: center">
 
 
-                        <a class="btn btn-xs btn-success" href="/account/citizen/formincitizen/{{$a->id}}">الاقتراحات/الشكاوى</a>
+                        <a class="btn btn-xs btn-success" href="/account/citizen/formincitizen1/{{$a->id}}">الاقتراحات/الشكاوى</a>
 
                         @if(check_permission('تعديل مواطن'))
                             <a class="btn btn-xs btn-primary" title="تعديل" href="/account/citizen/{{$a->id}}/edit"><i

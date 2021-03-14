@@ -95,7 +95,7 @@ class AccountController extends BaseController
 
         if ($request['theaction'] == 'search')
         {
-            $items = $items->orderBy("full_name")->paginate(5)->appends([
+            $items = $items->orderBy("full_name")->paginate(2)->appends([
                 "q" => $q, "circles" => $circles,"full_name" => $account_id ,"account_id" => $account_id ,
                 "project_id" => $project_id, "the_type" => $the_type, "rate_id" => $rate_id, "theaction" => 'search']);
 

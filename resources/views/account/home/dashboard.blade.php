@@ -178,7 +178,7 @@
                                                                              
                                                                          @else
                                                                          <a class="btn btn-sm"
-                                                                         href="/account/project/citizeninproject/{{$a->id}}" style="border-color: unset;
+                                                                         href="/notbenfit" style="border-color: unset;
                                                                               color: #ffffff;
                                                                               border: none;
                                                                               background: #32c5d2!important;"> غير المستفيدين </a>

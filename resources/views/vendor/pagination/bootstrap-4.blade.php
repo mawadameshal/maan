@@ -1,3 +1,4 @@
+<div class="col-md-12" style="float: left;margin-left:8px">
 @if ($paginator->hasPages())
     <ul class="pagination" role="navigation">
         {{-- Previous Page Link --}}
@@ -12,8 +13,8 @@
         @endif
 
         <?php
-        $start = $paginator->currentPage() - 3; // show 3 pagination links before current
-        $end = $paginator->currentPage() + 3; // show 3 pagination links after current
+        $start = $paginator->currentPage() - 2; // show 3 pagination links before current
+        $end = $paginator->currentPage() + 2; // show 3 pagination links after current
         if($start < 1) {
             $start = 1; // reset start to 1
             $end += 1;
@@ -57,3 +58,5 @@
         @endif
     </ul>
 @endif
+
+</div>

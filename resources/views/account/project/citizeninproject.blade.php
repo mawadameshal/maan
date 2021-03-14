@@ -18,21 +18,7 @@
                 <form action="{{ route('save-citizen-data-project', $item->id) }}" method="POST" enctype="multipart/form-data"
                       id="dataListForm" style="padding-top: 20px;border-top: 1px solid #e2e2e2;">
                     @csrf
-                    <div class="form-group row">
-                        <div class="col-sm-6">
-                            <span> يجب رفع بيانات المستفيدين من مشروع {{ $item->name }} حسب النموذج المرفق: </span>
-                            <a href="{{ route('download-citizen-file') }}" class="btn btn-primary"
-                               style="margin-top:10px;margin-right: 15%;"><i class="fa fa-download" style=""></i> تحميل
-                                نموذج الملف المطلوب </a>
-                        </div>
-
-                        <div class="col-sm-4" style="display: inline-flex;margin-top: 2%;">
-                            <input type="file" name="data_file" style="width: 200px;"/>
-                            <input type="submit"
-                                   style="width:70px;padding: 0.4rem 2rem !important;font-size: 1.3rem !important;"
-                                   value="رفع" class="btn btn-primary"/>
-                        </div>
-                    </div>
+                   
                     <input type="hidden" name="project_id" id="project_id" value="{{$item->id}}">
                 </form>
             @endif
@@ -96,6 +82,7 @@
                     <thead>
                     <tr>
                         <th style="max-width: 50px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">#</th>
+                        <th style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">رقم طلب المشروع</th>
                         <th style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">الاسم رباعي</th>
                         <th style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">رقم الهوية</th>
                         <th style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">المحافظة</th>
@@ -103,7 +90,7 @@
                         <th style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">الشارع</th>-->
                         <th style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">رقم التواصل (1)</th>
                         <th style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">رقم التواصل (2)</th>
-                        <th style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">اسم المشروع</th>
+                        {{-- <th style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">اسم المشروع</th> --}}
                         <th width="21%">التفاصيل ذات العلاقة بالمستفيد</th>
                     </tr>
                     </thead>
@@ -111,6 +98,7 @@
                     @foreach($items as $a)
                         <tr>
                         <td style="max-width: 50px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{$loop->iteration}}</td>
+                        <td style="max-width: 100px;word-break: normal;">{{$a->id}}</td>
                             <td style="max-width: 100px;word-break: normal;">{{$a->first_name." ".$a->father_name." ".$a->grandfather_name." ".$a->last_name}}</td>
                             <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{$a->id_number}}</td>
                             <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{$a->governorate}}</td>
@@ -118,13 +106,14 @@
                             <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">{{$a->street}}</td>-->
                             <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center;" class="text-left" dir="ltr">{{$a->mobile}}</td>
                             <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center;" class="text-left" dir="ltr">{{$a->mobile2}}</td>
-                            <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center;" class="text-left" dir="ltr">{{$item->name}}</td>
+                            {{-- <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;text-align: center;" class="text-left" dir="ltr">{{$item->name}}</td> --}}
                             <td style="text-align: center !important;">
                                 @if(check_permission('تعديل مواطن'))
                                     <a class="btn btn-xs btn-primary" title="تعديل" href="/account/citizen/{{$a->id}}/edit"><i
                                                 class="fa fa-edit"></i></a>
-                                    <a class="btn btn-xs btn-info"
-                                       href="/account/citizen/select-project/{{$a->id}}">المشاريع</a>
+                                                <a class="btn btn-xs Confirm btn-danger" title="حذف" href="/account/citizen/delete/{{$a->id}}"><i
+                                                    class="fa fa-trash"></i></a>
+                                  
                                 @endif
                             </td>
                         </tr>

@@ -189,14 +189,17 @@
                             </div>
                             <div class="col-sm-5">
 
-                                <select class="form-control {{($errors->first('project_id') ? " form-error" : "")}}" name="project_id">
-                                    <option value="">اختر</option>
-                                    @foreach ($projects as $project )
-                                        <option value="{{ $project->id }}">{{ $project->name }}</option>
-
+                                <ul disabled class="list-unstyled">
+                                    @foreach($projects as $project)
+                                        @if($project->id!="1")
+                                        <li>
+                                            <label><input  {{$projects->contains($project->id)?'checked':''}} type="checkbox" name="projects[]"
+                        
+                                                           value="{{$project->id}}" /> <b>{{$project->name}} - {{$project->code}}</b></label>
+                                        </li>
+                                        @endif
                                     @endforeach
-
-                                </select>
+                                </ul>
                                 {!! $errors->first('project_id', '<p class="help-block" style="color:red;">:message</p>') !!}
                             </div>
                         </div>
