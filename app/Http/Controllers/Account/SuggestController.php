@@ -39,15 +39,15 @@ class SuggestController extends BaseController{
         $items->main_category_id = $request->input('main_category_id');
         $items->main_suggest_id = $request->input('main_suggest_id');
         //dd($items);
-        if($request['citizen_show']=='citizen_show')
-            $request['citizen_show']=1;
-        else
-            $request['citizen_msg']=' ';
-
-        if($request['citizen_show']=='benefic_show')
-            $request['benefic_show']=1;
-        else
-            $request['benefic_msg']=' ';
+//        if($request['citizen_show']=='citizen_show')
+//            $request['citizen_show']=1;
+//        else
+//            $request['citizen_msg']=' ';
+//
+//        if($request['citizen_show']=='benefic_show')
+//            $request['benefic_show']=1;
+//        else
+//            $request['benefic_msg']=' ';
 
 //
 //        if($request['citizen_show']==1)

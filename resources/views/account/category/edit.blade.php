@@ -95,7 +95,7 @@ foreach ($CategoryCircles as $CategoryCircle){
                                 <div class="form-check">
                                     {{--                                    <input class="form-check-input" name="citizen_show" type="hidden" value="0">--}}
                                     <input class="form-check-input" :checked="{{$item->citizen_show}}" type="checkbox" id="citizen_show"
-                                           name="citizen_show" value="citizen_show">
+                                           name="citizen_show" value="1">
                                     <label class="form-check-label" for="citizen_show">
                                         غير مستفيد من مشاريع المركز
                                     </label>
@@ -104,10 +104,10 @@ foreach ($CategoryCircles as $CategoryCircle){
                             <div class="col-md-12"></div>
                             <div class="col-md-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" :checked="{{$item->benefic_show}}" name="benefic_show" type="hidden" value="0">
-                                    <input class="form-check-input" type="checkbox" id="benefic_show"
-                                           name="citizen_show" value="benefic_show">
-                                    <label class="form-check-label" for="citizen_show">
+{{--                                    <input class="form-check-input" :checked="{{$item->benefic_show}}" name="benefic_show" type="hidden" value="0">--}}
+                                    <input class="form-check-input"  :checked="{{$item->benefic_show}}" type="checkbox" id="benefic_show"
+                                           name="benefic_show" value="1">
+                                    <label class="form-check-label" for="benefic_show">
 
                                         مستفيد من مشاريع المركز
                                     </label>

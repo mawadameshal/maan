@@ -60,3 +60,15 @@ ALTER TABLE `forms` CHANGE `reprocessing` `reprocessing` TINYINT(2) NULL DEFAULT
 ALTER TABLE `forms` ADD `confirm_deleting` TINYINT(4) NOT NULL DEFAULT '0' AFTER `user_reprocessing_recommendations_id`, ADD `recommendations_for_deleting` TEXT NULL DEFAULT NULL AFTER `confirm_deleting`;
 ALTER TABLE `forms` ADD `user_recommendations_for_deleting_id` INT(11) NULL DEFAULT NULL AFTER `recommendations_for_deleting`;
 ALTER TABLE `forms` CHANGE `confirm_deleting` `confirm_deleting` DATETIME NULL DEFAULT NULL;
+
+
+----------
+ALTER TABLE `form_responses` ADD `old_response` TEXT NULL DEFAULT NULL AFTER `deleted_at`;
+ALTER TABLE `form_responses` ADD `confirm_account_id` INT(11) NULL DEFAULT NULL AFTER `old_response`, ADD `objection_response` TINYINT(4) NULL DEFAULT NULL AFTER `confirm_account_id`, ADD `confirmation_date` DATE NULL DEFAULT NULL AFTER `objection_response`, ADD `confirmation_status` TINYINT(4) NULL DEFAULT NULL AFTER `confirmation_date`;
+
+
+ALTER TABLE `form_follows` ADD `account_id` INT(11) NULL DEFAULT NULL AFTER `deleted_at`;
+
+ALTER TABLE `form_follows` ADD `follow_reason_not` VARCHAR(500) NULL DEFAULT NULL AFTER `account_id`;
+
+

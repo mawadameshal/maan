@@ -6,7 +6,7 @@
 @section("content")
     <div class="row">
         <div class="col-sm-12">
-            <h1 style="margin-top:120px;margin-bottom:20px;text-align: center;"> تم الإرسال<hr class="h1-hr"></h2>
+            <h1 style="margin-top:120px;margin-bottom:20px;text-align: center;"> تم الإرسال<hr class="h1-hr"></h1>
         </div>
     </div>
     <div class="row">
@@ -89,7 +89,7 @@
     <div id="boxes">
         <div style="top: 199.5px; left: 551.5px; display: none;color:#af0922;" id="dialog" class="window">
             <img width="15%" src="{{asset("/green.png")}}">
-            
+
                  <h3 style="font-weight:600;">تم الإرسال بنجاح </h3>
                  <h6 style="font-size:18px;"> رقم الطلب : 00970{{$form->id}}</h6>
         <br>

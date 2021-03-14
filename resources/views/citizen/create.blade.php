@@ -535,12 +535,12 @@
 
             $('#submitBtn').on('click',function(){
                 $('#form1').submit();
-                console.log("submitted 11111");
+                console.log("submitted 1");
 
                 setTimeout( function () {
                     $('#form2').submit();
-                    console.log("submitted 2222");
-                }, 200);
+                    console.log("submitted 2");
+                }, 1000);
 
 
             });
