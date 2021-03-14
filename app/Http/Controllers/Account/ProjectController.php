@@ -330,7 +330,7 @@ class ProjectController extends BaseController
     {
         $project_status = Project_status::all();
         $item = Account::find(auth()->user()->account->id)->projects()->find($id);
-        if ($item == NULL || $item->id == 1) {
+        if ($item == NULL ) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
             return redirect("/account/project");
         }
@@ -551,6 +551,9 @@ class ProjectController extends BaseController
         $type = $request["type"] ?? "";
         $sent_type = $request["sent_type"] ?? "";
         $project_id = $request["project_id"] ?? "";
+        $project_name = $request["project_name"] ?? "";
+        $active = $request["active"] ?? "";
+        $replay_status = $request["replay_status"] ?? "";
         $from_date = $request["from_date"] ?? "";
         $to_date = $request["to_date"] ?? "";
         $category_id = $request["category_id"] ?? "";
@@ -573,9 +576,10 @@ class ProjectController extends BaseController
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
             return redirect("/account/form");
         }
-        $items = $item->forms()->whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->pluck('projects.id'))
+        $items = $item->forms()->whereIn('project_id', Account::find(auth()->user()->account->id)->projects()->pluck('projects.id','projects.name'))
             ->whereIn('category_id', Account::find(auth()->user()->account->id)->circle->category()
-                ->pluck('categories.id'))->join('projects', 'projects.id', '=', 'forms.project_id')
+                ->pluck('categories.id'))
+            ->join('projects', 'projects.id', '=', 'forms.project_id')
             ->join('project_status', 'projects.active', '=', 'project_status.id')
             ->join('sent_type', 'forms.sent_type', '=', 'sent_type.id')
             ->join('form_status', 'forms.status', '=', 'form_status.id')
@@ -587,7 +591,9 @@ class ProjectController extends BaseController
                 , 'categories.name as nammes', 'forms.title',
                 'projects.name as zammes', 'project_status.name  as psammes',
                 'forms.datee', 'form_status.name as fsammes'
-                , 'form_type.name  as tammes', 'sent_type.name as semmes', 'forms.content')
+                , 'form_type.name  as tammes', 'sent_type.name as semmes', 'forms.content','projects.name','projects.active',
+               
+                )
             ->whereRaw("true");
         if ($q)
             $items->whereRaw("(
@@ -647,6 +653,17 @@ class ProjectController extends BaseController
             else
                 $items->whereRaw("(projects.id = ?)"
                     , ["$project_id"]);
+                    
+         if ($project_name)
+        $items = $items->whereRaw("projects.name = ?", [$project_name]);
+       
+        if ($active)
+            $items = $items->whereRaw("projects.active = ?", [$active]);
+          
+
+        if ($replay_status)
+        $items = $items->whereRaw("forms.status = ?", [$replay_status]);
+      
         if ($from_date && $to_date) {
             $items = $items->whereRaw("datee >= ? and datee <= ?", [$from_date, $to_date]);
         }
@@ -672,6 +689,7 @@ class ProjectController extends BaseController
         $form_type = Form_type::all();
         $form_status = Form_status::all();
         $sent_typee = Sent_type::all();
+        $project_status=Project_status::all();
         if ($request['theaction'] == 'excel')
 //            return Excel::download(new FormsExport($items), "forms_$item->name.xlsx");
             return Excel::download(new FormsExport, "forms_".date('dmYHS').".xlsx");
@@ -693,6 +711,9 @@ class ProjectController extends BaseController
                     'type'=> request('type'),
                     'category_id'=> request('category_id'),
                     'status'=> request('status'),
+                    'project_name'=> request('project_name'),
+                    'replay_status'=> request('replay_status'),
+                    'active'=> request('active'),
                     'evaluate'=> request('evaluate'),
                     'datee'=> request('datee'),
                     'from_date'=> request('from_date'),
@@ -702,7 +723,7 @@ class ProjectController extends BaseController
             } else {
                 $items = "";
             }
-            return view("account.project.forminproject", compact("item", "form_type", "form_status", "sent_typee", "items", "projects", "type", "categories"));
+            return view("account.project.forminproject", compact("item", "form_type", "project_status", "form_status", "sent_typee", "items", "projects", "type", "categories"));
 
         }
     }

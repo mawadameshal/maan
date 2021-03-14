@@ -91,6 +91,7 @@ Route::post('/account/account/select-project-post/{id}','Account\AccountControll
 Route::get('/account/account/forminaccount/{id}','Account\AccountController@forminaccount');
 //ادارة المشاريع
 Route::post('/account/project/importcitizentoproject/{id}','Account\ProjectController@import');
+Route::get('/account/project/edit/{id}','Account\ProjectController@edit');
 Route::resource("/account/project","Account\ProjectController");
 Route::get('/account/project/delete/{id}','Account\ProjectController@destroy');
 Route::get('/account/project/active/{id}','Account\ProjectController@active');

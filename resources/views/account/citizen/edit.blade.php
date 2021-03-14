@@ -149,20 +149,18 @@
            	 <div class="col-sm-4">
              		<label for="project_id" class="col-form-label" style="margin-top: 5px;">حدد اسم المشروع المراد دمج المستفيد ضمنه حالياً:</label>
 		</div>
-		 <div class="col-sm-5">
+        <div class="col-sm-5">
 
-
-            <select class="form-control {{($errors->first('project_id') ? " form-error" : "")}}" name="project_id">
+            <select   class="form-control {{($errors->first('project_id') ? " form-error" : "")}}" name="project_id">
                 <option value="">اختر</option>
                 @foreach ($projects as $project )
-                <option value="{{ $project->id }}">{{ $project->name }}</option>
+                    <option value="{{ $project->id }}">{{ $project->name }}</option>
 
                 @endforeach
 
             </select>
-             {!! $errors->first('project_id', '<p class="help-block" style="color:red;">:message</p>') !!}
-
-         </div>
+            {!! $errors->first('project_id', '<p class="help-block" style="color:red;">:message</p>') !!}
+        </div>
             </div>
 
 
@@ -178,28 +176,60 @@
 @endsection
 
 @section("js")
-    <script>
-        function gitCitizen() {
+<script>
 
-            var id_number = document.getElementById("id_number").value;
-            console.log(id_number);
+   
 
-            $.ajax({
-                url: "{{ route('get-citizen-data') }}",
-                type: "GET",
-                data: {
-                    _token: "{{ csrf_token() }}",
-                    id_number,
-                },
-                success: function (data) {
-                    console.log(data);
-                    document.getElementById("addNewForm").style.display = "none";
-                    $('#mo').html(data);
-                }
-            });
+    function dataList() {
+        // Get the checkbox
+        var checkBox = document.getElementById("dataListCheck");
+        // Get the output text
+        var text = document.getElementById("dataListForm");
 
-
+        // If the checkbox is checked, display the output text
+        if (checkBox.checked == true) {
+            text.style.display = "block";
+        } else {
+            text.style.display = "none";
         }
-    </script>
+    }
+    function addNewCitizen() {
+            // Get the checkbox
+            var checkBox = document.getElementById("addNewCheck");
+            // Get the output text
+            var text = document.getElementById("addNewForm");
+
+            // If the checkbox is checked, display the output text
+            if (checkBox.checked == true) {
+                text.style.display = "block";
+            } else {
+                text.style.display = "none";
+            }
+        }
+  
+    function gitCitizen() {
+
+        var id_number = document.getElementById("id_number").value;
+        console.log(id_number);
+
+        $.ajax({
+            url: "{{ route('get-citizen-data') }}",
+            type: "GET",
+            data: {
+                _token: "{{ csrf_token() }}",
+                id_number,
+            },
+            success: function (data) {
+                console.log(data);
+                document.getElementById("addNewForm").style.display = "none";
+                $('#mo').html(data);
+            }
+        });
+
+
+    }
+
+
+</script>
 
 @endsection

@@ -11,6 +11,7 @@
         </td>
     </tr>
     <tr>
+        <th  style="text-align: center;vertical-align:center;background-color: #b4c6e7;;height: 20px;padding: 10px;border: 1px solid black;border-collapse: collapse;"> الرقم المرجعي</th>
         <th  style="text-align: center;vertical-align:center;background-color: #b4c6e7;;height: 20px;padding: 10px;border: 1px solid black;border-collapse: collapse;">الاسم الأول</th>
         <th style="text-align: center;vertical-align:center;background-color: #b4c6e7;;height: 20px;padding: 10px;border: 1px solid black;border-collapse: collapse;">اسم الأب</th>
         <th style="text-align: center;vertical-align:center;background-color: #b4c6e7;;height: 20px;padding: 10px;border: 1px solid black;border-collapse: collapse;">اسم الجد</th>
@@ -21,8 +22,9 @@
         <th style="text-align: center;vertical-align:center;background-color: #b4c6e7;;height: 20px;padding: 10px;border: 1px solid black;border-collapse: collapse;">المحافظة</th>
         <th style="text-align: center;vertical-align:center;background-color: #b4c6e7;;height: 20px;padding: 10px;border: 1px solid black;border-collapse: collapse;">المنطقة</th>
         <th style="text-align: center;vertical-align:center;background-color: #b4c6e7;;height: 20px;padding: 10px;border: 1px solid black;border-collapse: collapse;">العنوان</th>
-        <th style="text-align: center;vertical-align:center;background-color: #b4c6e7;;height: 20px;padding: 10px;border: 1px solid black;border-collapse: collapse;">عدد الاقتراحات</th>
-        <th style="text-align: center;vertical-align:center;background-color: #b4c6e7;;height: 20px;padding: 10px;border: 1px solid black;border-collapse: collapse;">عدد الشكاوى</th>
+        <th style="text-align: center;vertical-align:center;background-color: #b4c6e7;;height: 20px;padding: 10px;border: 1px solid black;border-collapse: collapse;"> عدد الاقتراحات التي تقدم بها غير المستفيد</th>
+        <th style="text-align: center;vertical-align:center;background-color: #b4c6e7;;height: 20px;padding: 10px;border: 1px solid black;border-collapse: collapse;">عدد الشكاوى التي تقدم بها غير المستفيد</th>
+   
     </tr>
     </thead>
     <tbody>
@@ -43,6 +45,7 @@
         }
         ?>
         <tr>
+            <td style="text-align: center;padding: 10px;border: 1px solid black;border-collapse: collapse;">{{$item->id}}</td>
             <td style="text-align: center;padding: 10px;border: 1px solid black;border-collapse: collapse;">{{$item->first_name}}</td>
             <td style="text-align: center;padding: 10px;border: 1px solid black;border-collapse: collapse;">{{$item->father_name}}</td>
             <td style="text-align: center;padding: 10px;border: 1px solid black;border-collapse: collapse;">{{$item->grandfather_name}}</td>

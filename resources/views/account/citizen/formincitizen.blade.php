@@ -1,6 +1,6 @@
 @extends("layouts._account_layout")
 
-@section("title", " الاقتراحات/الشكاوى  التي تقدم بها $item->first_name $item->father_name $item->grandfather_name $item->last_name ")
+@section("title", "   الاقتراحات/الشكاوى  التي تقدم بها المستفيد $item->first_name $item->father_name $item->grandfather_name $item->last_name ")
 
 
 @section("content")
@@ -8,7 +8,7 @@
 <div class="row">
 
     <div class="col-sm-12 col-md-12">
-        <h4>هذه الواجهة مخصصة للتحكم في إدارة الاقتراحات والشكاوى المسجلة في النظام باسم المواطن</h4>
+        <h4>هذه الواجهة مخصصة للتحكم في إدارة الاقتراحات والشكاوى المسجلة في النظام باسم المستفيد</h4>
     </div>
 
 
@@ -42,9 +42,7 @@
                     <input type="text" class="form-control" name="form_id" placeholder="الرقم المرجعي" >
                 </div>
 
-                <div class="col-sm-3 adv-search">
-                    <input type="text" class="form-control" name="id_number" placeholder="رقم الهوية" >
-                </div>
+               
 
                 <div class="col-sm-3 adv-search">
                     <select name="project_id" class="form-control">
@@ -60,21 +58,18 @@
                         @endforeach
                     </select>
                 </div>
-            </div>
-
-            <div class="row">
 
                 <div class="col-sm-3 adv-search">
-                    <select name="category_name" class="form-control">
-                        <option value="" >فئة مقدم الاقتراح/الشكوى</option>
-                        <option value="0" >مستفد</option>
-                        <option value="1">غير مستفيد</option>
+                    <select name="active" class="form-control">
+                        <option value="" > حالة المشروع</option>
+                        <option value="1" >مستمر</option>
+                        <option value="2">منتهي</option>
                     </select>
                 </div>
-
+                
                 <div class="col-sm-3 adv-search">
                     <select name="sent_type" class="form-control">
-
+    
                         <option value="">قناة الاستقبال</option>
                         @foreach($sent_typee as $sent_type)
                             <option {{request('sent_type')==$sent_type->id?"selected":""}} value="{{$sent_type->id}}">{{$sent_type->name}}</option>
@@ -82,6 +77,13 @@
                     </select>
                 </div>
 
+            </div>
+
+            
+
+
+            <div class="row">
+                
                 <div class="col-sm-3 adv-search">
                     <select name="type" class="form-control">
                         <option value="">التصنيف (اقتراح أو شكوى)</option>
@@ -92,42 +94,52 @@
                         @endforeach
                     </select>
                 </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-3  adv-search">
-                    <select name="category_id" class="form-control">
-                        <option value="" selected>فئة الاقتراح/شكوى</option>
-                        @foreach($categories as $category)
-                            @if($category->id != 1 && $category->id != 2)
-                                <option
-                                    @if(request('category_id')===''.$category->id)selected
-                                    @endif
-                                    value="{{$category->id}}">{{$category->name}}</option>
-                            @endif
-                        @endforeach
+                <div class="col-sm-3 adv-search">
+                    <select name="category_name" class="form-control">
+                        <option value="" >فئة مقدم الاقتراح/الشكوى</option>
+                        <option value="0" >مستفد</option>
+                        <option value="1">غير مستفيد</option>
                     </select>
                 </div>
 
+               
+            <div class="row">
+            
                 <div class="col-sm-3 adv-search">
-                    <select name="form_status" class="form-control">
+                    <select name="status" class="form-control">
                         <option value="">حالة الرد</option>
                         @foreach($form_status as $fstatus)
                             @if($fstatus->id != 3 && $fstatus->id != 4)
-
+    
                                 {{$fstatus->name = 'لم يتم الرد'}}
                                 <option {{request('status')==$fstatus->id?"selected":""}} value="{{$fstatus->id}}">
                                     @if($fstatus->id == 1)
-                                        لم يتم الرد
-                                    @else
+                                    قيد الدراسة
+                                        @else
                                         تم الرد
                                     @endif
-
+    
                                 </option>
                             @endif
                         @endforeach
                     </select>
                 </div>
+           
+                
+            <div class="col-sm-3 adv-search">
+                <select name="replay_status" class="form-control">
+                    <option value="">حالة تبليغ الرد </option>
+                    <option value="2" >تم التبليغ</option>
+                    <option value="1">قيد التبليغ</option>
+                    <option value="0">لم يتم التبليغ</option>
+
+                </select>
+            </div>
+      
+            </div>
+
+
+               
 
                 <div class="col-sm-3  adv-search">
                     <select name="evaluate" class="form-control">
@@ -140,6 +152,9 @@
                     </select>
                 </div>
             </div>
+
+                 
+
 
             <div class="row">
                 <div class="col-sm-3 adv-search">

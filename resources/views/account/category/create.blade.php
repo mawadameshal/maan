@@ -79,7 +79,7 @@
                             </div>
                             <div class="col-md-12"></div><br><br>
                             <div class="col-md-4">
-                                <div class="form-check">
+                                <div class="form-check" >
 {{--                                    <input class="form-check-input" name="citizen_show" type="hidden" value="0">--}}
                                     <input class="form-check-input" type="checkbox" id="citizen_show"
                                            name="citizen_show" value="citizen_show">
@@ -87,9 +87,9 @@
                                         غير مستفيد من مشاريع المركز
                                     </label>
                                 </div>
-                            </div>
+                          
                             <div class="col-md-12"></div>
-                            <div class="col-md-4">
+                            
                                 <div class="form-check">
                                     <input class="form-check-input" name="benefic_show" type="hidden" value="0">
                                     <input class="form-check-input" type="checkbox" id="benefic_show"
@@ -116,6 +116,7 @@
                 <br>
 
                 <div class="mt-3"></div>
+             
                 <div class="table-responsive" id="editLevelTable2" style="display:none;">
                     <table style="width:185% !important;max-width:185% !important;white-space:normal;" class="table table-hover table-striped">
                         <thead>

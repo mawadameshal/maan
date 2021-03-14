@@ -18,12 +18,38 @@
 @section("content")
     <div class="row" id="app">
         <div class="col-md-12">
+            <br>
+            <br>
+            <div class="table-responsive" id="editLevelTable2">
+            
+                <table style="width:30% !important;max-width:80% !important;white-space:normal;" class="table table-hover table-striped">
+                   
+                    <tr>
+                        <th style="max-width: 100px;word-break: normal; background:#ed6b75;color:#fff;">الفئة الرئيسية</th>
+                        <td   style="word-break: normal;" id="maincat">{{$name}}</td>
+
+               
+                    </tr>
+                    
+                    <tbody>
+                    <tr>
+                        <th style="max-width: 100px;word-break: normal; background:#ed6b75;color:#fff;">الفئة الفرعية</th>
+                        <td   style="word-break: normal;" id="subcat">{{$item->name}}</td>
+                    </tr>
+                  
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+            
+         
+           
             <div class="table-responsive" id="editLevelTable2">
                 <table style="width:185% !important;max-width:185% !important;white-space:normal;" class="table table-hover table-striped">
                     <thead>
                     <tr>
-                        <th style="max-width: 100px;word-break: normal;">الفئة الرئيسية</th>
-                        <th style="max-width: 100px;word-break: normal;">الفئة الفرعية</th>
+                      
                         <th colspan="2" style="max-width: 100px;word-break: normal;">نوع الإجراء</th>
                         @foreach($circles as $circle)
                             <th style="max-width: 100px;word-break: normal;">{{$circle->name}}</th>
@@ -31,10 +57,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td  colspan="1" rowspan="6" scope="col" style="word-break: normal;" id="maincat">{{$name}}</td>
-                        <td  colspan="1" rowspan="6" scope="col" style="word-break: normal;" id="subcat">{{$item->name}}</td>
-                    </tr>
+                   
                     @foreach($procedureTypes as $procedureType)
                         <tr>
                             @if($procedureType->id != 2 && $procedureType->id != 3)

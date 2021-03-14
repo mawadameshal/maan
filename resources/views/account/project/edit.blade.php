@@ -56,9 +56,9 @@
         </div>
 
         <div class="form-group row">
-            <div class="col-sm-5 col-md-offset-2">
+            <div  style="float: left;margin-left:30px;margin-top: 100px;">
                 <input type="submit" class="btn btn-success" value="حفظ"/>
-                <a href="/account/project" class="btn btn-light">الغاء الامر</a>
+                <a href="/account/project" class="btn btn-light">إلغاءالأمر</a>
             </div>
         </div>
     </form>

@@ -44,27 +44,27 @@
                 </div>
             </div>
             <br>
-            <div class="row">
-               <div class="col-sm-4">
-                   <div class="form-group adv-searchh" style="margin-left: 10px;margin-bottom: 10px;">
-                          <input type="text" class="form-control" name="id" value="" placeholder="الرقم المرجعي" >
+            <div class="">
+               <div class="col-sm-2">
+                   <div class="form-group adv-searchh">
+                          <input type="text" class="form-control" name="id" value="" placeholder="رقم طلب المشروع" >
                    </div>
                </div>
-               <div class="col-sm-4">
+               <div class="col-sm-2">
 
-                    <div class="form-group adv-searchh" style="margin-left: 10px;margin-bottom: 10px;">
+                    <div class="form-group adv-searchh" >
                       <input type="text" class="form-control" name="id_number" value="" placeholder="رقم الهوية" >
                     </div>
                     </div>
-               <div class="col-sm-4">
-                    <div class="form-group adv-searchh" style="margin-left: 10px;margin-bottom: 10px;">
-                      <input type="text" class="form-control" name="first_name" value="" placeholder="اسم مقدم الاقتراح/ الشكوى" >
+               <div class="col-sm-2">
+                    <div class="form-group adv-searchh" >
+                      <input type="text" class="form-control" name="first_name" value="" placeholder="اسم المستفيد" >
                     </div>
                </div>
             </div>
             <div class="row">
-               <div class="col-sm-4">
-                 <div class="form-group adv-searchh" style="margin-left: 10px;margin-bottom: 10px;">
+               <div class="col-sm-2">
+                 <div class="form-group adv-searchh" >
                     <select class="form-control" name="governorate">
                         <option value=""> المحافظة</option>
                         <option value="الشمال" {{old('governorate')=='الشمال'?"selected":""}}>الشمال</option>
@@ -75,9 +75,9 @@
                     </select>
                 </div>
                 </div>
-               <div class="col-sm-4">
+               <div class="col-sm-2">
 
-                <div class="form-group adv-searchh" style="margin-left: 10px;margin-bottom: 10px;">
+                <div class="form-group adv-searchh" >
                       {{--  <input type="text" class="form-control" name="project_id" value="" placeholder="اسم المشروع" style="width: 230px;">  --}}
                       <select class="form-control" name="project">
                         <option value=""> اسم المشروع</option>
@@ -90,7 +90,8 @@
 
                     </div>
                     </div>
-               <div class="col-sm-4">
+                    
+               <div class="col-sm-2">
                  <div class="form-group" style="margin-left: 10px;margin-bottom: 10px;">
                     <button type="submit" name="theaction" title ="بحث"  value="search"
                             class="btn btn-primary adv-searchh" style="width: 110px" >
@@ -163,10 +164,7 @@
 
                             <a class="btn btn-xs btn-primary" title="تعديل" href="/account/citizen/{{$a->id}}/edit"><i
                                         class="fa fa-edit"></i></a>
-                            @if($a->add_byself=="1" && $a->projects->toArray()==null)
-                                <a class="btn btn-xs Confirm btn-danger" title="حذف" href="/account/citizen/delete/{{$a->id}}"><i
-                                            class="fa fa-trash"></i></a>
-                            @endif
+                          
                         @endif
                     </td>
                 </tr>

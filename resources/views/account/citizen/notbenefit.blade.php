@@ -28,23 +28,23 @@
                 </div>
                 <div class="col-sm-12 "><br></div>
                 <div class="row">
-                   <div class="col-sm-4">
+                   <div class="col-sm-3">
                        <div class="form-group adv-searchh" style="margin-left: 10px;margin-bottom: 10px;">
                           <input type="text" class="form-control" name="id" value="" placeholder="الرقم المرجعي">
                         </div>
                    </div>
-                   <div class="col-sm-4">
+                   <div class="col-sm-3">
                         <div class="form-group adv-searchh" style="margin-left: 10px;margin-bottom: 10px;">
                           <input type="text" class="form-control" name="id_number" value="" placeholder="رقم الهوية">
                         </div>
                    </div>
-                   <div class="col-sm-4">
+                   <div class="col-sm-3">
                         <div class="form-group adv-searchh" style="margin-left: 10px;margin-bottom: 10px;">
                           <input type="text" class="form-control" name="first_name" value="" placeholder="اسم مقدم الاقتراح/ الشكوى">
                         </div>
                    </div>
 
-                   <div class="col-sm-4">
+                   <div class="col-sm-3">
                        <div class="form-group adv-searchh" style="margin-left: 10px;margin-bottom: 10px;">
                            <select class="form-control" name="governorate">
                             <option value=""> المحافظة</option>
@@ -106,11 +106,7 @@
                         @if(check_permission('تعديل مواطن'))
                             <a class="btn btn-xs btn-primary" title="تعديل" href="/account/citizen/{{$a->id}}/edit"><i
                                         class="fa fa-edit"></i></a>
-                            @if($a->add_byself=="1" && $a->projects->toArray()==null)
-                                <a class="btn btn-xs Confirm btn-danger" title="حذف" href="/account/citizen/delete/{{$a->id}}"><i
-                                            class="fa fa-trash"></i></a>
-                            @endif
-                        @endif
+                         @endif
                     </td>
                 </tr>
             @endforeach

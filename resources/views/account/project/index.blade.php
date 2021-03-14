@@ -189,6 +189,10 @@
                             @if($a->id!=1)
                                 <a class="btn btn-xs btn-danger" href="/account/project/citizeninproject/{{$a->id}}">
                                     المستفيدين</a>
+                                    @else
+                                    <a class="btn btn-xs btn-danger" href="/notbenfit">
+                                       غير المستفيدين</a>
+                                        
                             @endif
                             <a class="btn btn-xs btn-danger" href="/account/project/accountinproject/{{$a->id}}">الموظفين
                             </a>
@@ -202,11 +206,11 @@
 {{--                                    </button>--}}
 {{--                                </form>--}}
                             @if(check_permission('تعديل مشروع'))
-                                @if($a->id !=1)
+                                
                                     <a class="btn btn-xs btn-primary" title="تعديل"
-                                       href="/account/project/{{$a->id}}/edit"><i
+                                       href="/account/project/edit/{{$a->id}}"><i
                                                 class="fa fa-edit"></i></a>
-                                @endif
+                                
                                 @if($a->id !=1 && count($a->Accounts->toArray())<=1 && $a->citizens->toArray() == null && $a->forms->toArray() == null)
 
                                     <a class="btn btn-xs Confirm btn-danger"

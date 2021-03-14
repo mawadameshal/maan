@@ -21,6 +21,7 @@ use App\Citizen;
 use App\Account;
 use App\CitizenProjects;
 use App\Project;
+use App\Project_status;
 use App\Imports\CitizenImport;
 use App\Http\Requests\CitizenRequest;
 use  PDF;
@@ -84,16 +85,19 @@ class CitizenController extends BaseController
 
                         $citizen = Citizen::create([
                             'first_name' => $row['alasm_alaol'],
-                            'email' => $row['albryd'],
                             'father_name' => $row['asm_alab'],
-                            'last_name' => $row['asm_alaaael'],
                             'grandfather_name' => $row['asm_aljd'],
+                            'last_name' => $row['asm_alaaael'],
                             'id_number' => $row['rkm_alhoy'],
+                            'mobile' => $row['rkm_altoasl_1'],
+                            'mobile2' => $row['rkm_altoasl_2'],
                             'governorate' => $row['almhafth'],
                             'city' => $row['almntk'],
                             'street' => $row['alaanoan'],
-                            'mobile' => $row['rkm_altoasl_1'],
-                            'mobile2' => $row['rkm_altoasl_2'],
+                            //'project_id' => $row['rkm_almsroa'],
+                          //  'email' => $row['albryd'], >>لم يطلب البريد الالكتروني
+
+                           
                         ]);
 
 
@@ -831,6 +835,8 @@ class CitizenController extends BaseController
         $type = $request["type"] ?? "";
         $sent_type = $request["sent_type"] ?? "";
         $project_id = $request["project_id"] ?? "";
+        $active = $request["active"] ?? "";
+        $replay_status = $request["replay_status"] ?? "";
         $from_date = $request["from_date"] ?? "";
         $to_date = $request["to_date"] ?? "";
         $category_id = $request["category_id"] ?? "";
@@ -867,7 +873,7 @@ class CitizenController extends BaseController
                 , 'categories.name as nammes', 'forms.title',
                 'projects.name as zammes', 'project_status.name as sammes',
                 'forms.datee', 'form_status.name as fammes'
-                , 'form_type.name as zzammes', 'sent_type.name as ozammes', 'forms.content')
+                , 'form_type.name as zzammes', 'sent_type.name as ozammes', 'forms.content','projects.name','projects.active')
             ->whereRaw("true");
         if ($q)
             $items->whereRaw("(
@@ -944,6 +950,15 @@ class CitizenController extends BaseController
         //     else
         //         $items = $items->whereNull("read");
         // }
+
+        
+        if ($active)
+            $items = $items->whereRaw("projects.active = ?", [$active]);
+          
+
+        if ($replay_status)
+        $items = $items->whereRaw("forms.status = ?", [$replay_status]);
+      
 
 
 
@@ -1064,6 +1079,7 @@ class CitizenController extends BaseController
         $form_type = Form_type::all();
         $form_status = Form_status::all();
         $sent_typee = Sent_type::all();
+        $project_status=Project_status::all();
         if ($request['theaction'] == 'excel')
             return Excel::download(new CitizenFormExport($id), "citizen_".date('dmYHS').".xlsx");
         elseif ($request['theaction'] == 'print') {
@@ -1085,6 +1101,8 @@ class CitizenController extends BaseController
                     'type' => request('type'),
                     'category_id'=> request('category_id'),
                     'form_status'=> request('form_status'),
+                    'replay_status'=> request('replay_status'),
+                    'active'=> request('active'),
                     'evaluate' => request('evaluate'),
                     'datee'=> request('datee'),
                     'from_date'=> request('from_date'),
@@ -1095,7 +1113,7 @@ class CitizenController extends BaseController
                 $items  = "" ;
             }
 
-            return view("account.citizen.formincitizen", compact("items", "form_type", "form_status", "sent_typee", "item", "projects", "type", "categories"));
+            return view("account.citizen.formincitizen", compact("items", "form_type", "form_status", "project_status","sent_typee", "item", "projects", "type", "categories"));
         }
     }
 

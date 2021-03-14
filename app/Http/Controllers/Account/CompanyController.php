@@ -80,26 +80,32 @@ class CompanyController extends BaseController{
     public function update(CompanyRequest $request, $id)
     {
 
-        $item = Company::find($id);
+        $data = $request->validate([
+            
+            'steps_file' => 'sometimes|nullable|max:6400|mimes:jpeg,bmp,png,gif,svg,pdf,docx,xls,xlsx,txt,File',
+        ]);
+     
+        if ($request->hasFile('steps_file')) {
+            $fileName = time().'.'.$request->steps_file->extension();
+            $request->steps_file->move(public_path('uploads'), $fileName);
+            $data['steps_file'] =$fileName;
+        }else{
+            $data['steps_file'] = $item->steps_file;
+        }
+
+        $item= Company::find($id);
+        $item->update([
+            'steps_file' =>$data['steps_file'],
+       ]);
+        $item->save();
+        session::flash('msg','s:تمت عميلة التعديل بنجاح');
+        return redirect('/account');
+
         if ($item == NULL) {
             Session::flash("msg", "e:الرجاء التاكد من الرابط المطلوب");
             return redirect("/account");
         }
 
-        if ($request->hasFile('file_home')) {
-            $file = $request->file('file_home');
-            //return $file;
-            $destinationPath = public_path('uploads');
-            $extension = strtolower($file->getClientOriginalExtension());
-            $fileName = uniqid().'.'.$extension;
-            $file->move($destinationPath, $fileName);
-            $item->steps_file = $fileName;
-            $item->save();
-        }
-        //return $item;
-        $item->update($request->all());
-        session::flash('msg','s:تمت عميلة التعديل بنجاح');
-        return redirect('/account');
     }
 
 

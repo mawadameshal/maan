@@ -19,19 +19,34 @@ class CircleController extends BaseController
      */
     public function index(Request $request)
     {
-        $q = $request["q"] ?? "";
+
+
+        // $q = $request["q"] ?? "";
+        // $items = Circle::whereRaw("true");
+        // if ($items == null) {
+        //     session::flash('msg', 'w:نأسف لا يوجد بيانات لعرضها');
+        //     return redirect('/account/circle');
+        // }
+        // if ($q)
+        //     $items->whereRaw("(name like ?)"
+        //         , ["%$q%"]);
+        $circles = $request["circles"] ?? "";
         $items = Circle::whereRaw("true");
         if ($items == null) {
             session::flash('msg', 'w:نأسف لا يوجد بيانات لعرضها');
-            return redirect('/account/circle');
+            return redirect('/account/account');
         }
-        if ($q)
-            $items->whereRaw("(name like ?)"
-                , ["%$q%"]);
+
+        if ($circles)
+        $items->where("id", "=", $circles);
+
+
+
 
         $items = $items->orderBy("id")->paginate(5)->appends([
-            "q" => $q]);
-        return view("account.circle.index", compact('items'));
+            "circles" => $circles]);
+            $circles = Circle::all();
+        return view("account.circle.index", compact('items','circles'));
     }
 
     public function create()

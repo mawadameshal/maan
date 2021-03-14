@@ -53,7 +53,9 @@
                         <select class="form-control {{($errors->first('project_id') ? " form-error" : "")}}" name="project_id">
                             <option value="">اختر</option>
                             @foreach ($projects as $project )
+                            @if($project->active ==1)
                                 <option value="{{ $project->id }}">{{ $project->name }}</option>
+                                @endif
                             @endforeach
                         </select>
                         {!! $errors->first('project_id', '<p class="help-block" style="color:red;">:message</p>') !!}
@@ -78,6 +80,7 @@
                     <div class="col-sm-5">
                         <label for="project_id" class="col-form-label" style="margin-top: 5px;">يرجى ادخال رقم الهوية لفحص معلومات المستفيد/ة:</label>
                     </div>
+                    
                     <div class="col-sm-5">
                         <input type="text" onchange="gitCitizen()" autofocus class="form-control {{($errors->first('id_number') ? " form-error" : "")}}" value="{{old("id_number")}}" id="id_number" name="id_number">
                         {!! $errors->first('id_number', '<p class="help-block" style="color:red;">:message</p>') !!}
@@ -102,10 +105,10 @@
                         {!! $errors->first('father_name', '<p class="help-block" style="color:red;">:message</p>') !!}
                     </div>
                 </div>
-                <div class="form-group row">
+                <div class="form-group row">`
                     <div class="col-sm-5">
 
-                        <label for="grandfather_name" class="col-form-label">إسم الجد</label>
+                        <label for="grandfather_name" class="col-form-label">اسم الجد</label>
                         <input type="text" autofocus class="form-control {{($errors->first('grandfather_name') ? " form-error" : "")}}" value="{{old("grandfather_name")}}"
                                id="grandfather_name" name="grandfather_name">
                         {!! $errors->first('grandfather_name', '<p class="help-block" style="color:red;">:message</p>') !!}
@@ -127,19 +130,23 @@
                                name="id_number">
                         {!! $errors->first('id_number', '<p class="help-block" style="color:red;">:message</p>') !!}
                     </div>
-
                     <div class="col-sm-5">
-                        <label for="mobile" class="col-form-label"> رقم التواصل(1)</label>
-                        <input type="text" class="form-control {{($errors->first('mobile') ? " form-error" : "")}}" value="{{old("mobile")}}" id="mobile" name="mobile">
+                        <label for="mobile"  class="col-sm-4 col-form-label">رقم التواصل (1)</label>
+                        <input class="form-control {{($errors->first('mobile') ? " form-error" : "")}}"  type="tel"
+                         maxlength="10" onchange="phonenumber($('#mobile').val(),1)" value="{{old("mobile")}}" id="mobile" name="mobile">
+                        <span id="lblError1" style="color: red"></span>
                         {!! $errors->first('mobile', '<p class="help-block" style="color:red;">:message</p>') !!}
                     </div>
                 </div>
                 <div class="form-group row">
                     <div class="col-sm-5">
-                        <label for="mobile" class="col-form-label"> رقم التواصل(2)</label>
-                        <input type="text" class="form-control {{($errors->first('mobile') ? " form-error" : "")}}" value="{{old("mobile")}}" id="mobile" name="mobile">
-                        {!! $errors->first('mobile', '<p class="help-block" style="color:red;">:message</p>') !!}
+                        <label for="mobile2"  class="col-sm-4 col-form-label">رقم التواصل (2)</label>
+                        <input class="form-control {{($errors->first('mobile2') ? " form-error" : "")}}" type="tel"
+                              value="{{old("mobile2")}}" maxlength="10" id="mobile2" name="mobile2" onchange="phonenumber($('#mobile2').val(),2)">
+                        <span id="lblError2" style="color: red"></span>
+                        {!! $errors->first('mobile2', '<p class="help-block" style="color:red;">:message</p>') !!}
                     </div>
+
                     <div class="col-sm-5">
                         <label for="circle_id" class="col-form-label">المحافظة</label>
 
@@ -175,7 +182,7 @@
                         </ul>
                         <hr>
 
-                        <label class="col-form-label" style="font-weight:600;"> إضافته ضمن مشروع آخر، حدد: </label>
+                        <label class="col-form-label" style="font-weight:600;"> إضافة المستفيد ضمن مشروع آخر، حدد: </label>
                         <div class="form-group row">
                             <div class="col-sm-5">
                                 <label for="project_id" class="col-form-label" style="margin-top: 5px;">حدد اسم المشروع المدرج ضمنها المستفيد حالياً:</label>
@@ -275,5 +282,48 @@
 
 
     </script>
+    <script>
+        function phoneno(){
+            $('#mobile2').keypress(function(e) {
+                var a = [];
+                var k = e.which;
 
+                for (i = 48; i < 58; i++)
+                    a.push(i);
+
+                if (!(a.indexOf(k)>=0))
+                    e.preventDefault();
+            });
+
+            $('#mobile').keypress(function(e) {
+                var a = [];
+                var k = e.which;
+
+                for (i = 48; i < 58; i++)
+                    a.push(i);
+
+                if (!(a.indexOf(k)>=0))
+                    e.preventDefault();
+            });
+        }
+    </script>
+
+<script>
+    function phonenumber(inputtxt,id)
+    {
+        var regexPattern=new RegExp(/^(059|056)[0-9-+]+$/);    // regular expression pattern
+        console.log(regexPattern.test(inputtxt));
+        if(regexPattern.test(inputtxt))
+        {
+            $('#lblError'+id).html('');
+            return true;
+
+        }
+        else
+        {
+            $('#lblError'+id).html('يرجى إدخال رقم تواصل صحيح');
+            return false;
+        }
+    }
+</script>
 @endsection

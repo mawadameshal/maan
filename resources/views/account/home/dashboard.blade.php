@@ -1,7 +1,7 @@
 @extends("layouts._account_layout")
 <?php $test = Auth::user()->account->account_projects->where('project_id', "!=", "1")->groupBy('rate')?>
 
-@section("title", "الصفحة الرئيسية :  $item->full_name")
+@section("title", "الصفحة الرئيسية")
 
 @section("content")
 <div class="row">
@@ -52,7 +52,7 @@
 
 					  </tr>
 					  <tr>
-					    <th style="width: 30%;">رقم الجوال:</th>
+					    <th style="width: 30%;">رقم التواصل:</th>
 					    <td style="width: 100px;">0599000122233</td>
 
 					  </tr>
@@ -145,7 +145,7 @@
                                                                 <td class="hidden-xs"> {{$a->code}} </td>
 
                                                                 <td style="max-width: 100px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                                                                    <a href="/account/project/{{$a->id}}"> {{$a->name}} </a>
+                                                                    {{$a->name}}
                                                                 </td>
                                                                 <td class="hidden-xs"> @if($a->account_projects->where('rate','=','3')->first())
                                                                     {{$a->account_projects->where('rate','=','3')->first()->account->full_name}}
@@ -174,8 +174,17 @@
                                                                          color: #ffffff;
                                                                          border: none;
                                                                          background: #32c5d2!important;"> المستفيدين </a>
-                                                                            @endif
+                                                                         
+                                                                             
+                                                                         @else
+                                                                         <a class="btn btn-sm"
+                                                                         href="/account/project/citizeninproject/{{$a->id}}" style="border-color: unset;
+                                                                              color: #ffffff;
+                                                                              border: none;
+                                                                              background: #32c5d2!important;"> غير المستفيدين </a>
 
+                                                                         @endif
+                  
 
                                                                     {{-- <a class="btn btn-sm"
                                                                        href="/account/project/{{$a->id}}" style="border-color: unset;

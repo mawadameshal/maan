@@ -38,11 +38,11 @@
                     <textarea type="text" class="form-control" placeholder="نص تقديم الشكر" name="add_propusel_clouse" >{{$item['add_thanks_clouse']}}</textarea>
                 </div> --}}
                 <div class="form-group">
-                    <label>نص متابعة الاقتراحات</label>
+                    <label>نص تقديم الاقتراح</label>
                     <textarea type="text" class="form-control" placeholder="نص تقديم الاقتراح" name="add_thanks_clouse" >{{$item['add_propusel_clouse']}}</textarea>
                 </div>
                 <div class="form-group">
-                    <label>متابعة الاقتراحات والشكاوى</label>
+                    <label>نص متابعة الاقتراحات والشكاوى</label>
                     <textarea type="text" class="form-control" placeholder="نص متابعة الشكوى" name="follw_compline_clouse" >{{$item['follw_compline_clouse']}}</textarea>
                 </div>
                 <div class="form-group">
@@ -50,7 +50,7 @@
                     <textarea type="text" class="form-control" rows="8" placeholder="نص من نحن" name="how_we" >{{$item['how_we']}}</textarea>
                 </div>
                 <div class="form-group">
-                    <label>رقم الهاتف المحمول</label>
+                    <label>رقم الهاتف </label>
                     <input type="text" class="form-control" placeholder="رقم الهاتف المحمول" name="mopile" value="{{$item['mopile']}}">
                 </div>
                 <div class="form-group">
@@ -103,15 +103,22 @@
                         <label>يمكنك تحديث ملف الإرشادات العامة بالضغط أدناه:</label>
                         <br>
                         <br>
-                        <input type="file"  name="file_home">
+                        <input type="file"  name="steps_file">
                     </div>
                 </div>
                 <br>
-                <div class="form-actions">
+                <br>
+                <br>
+            </div>
+        </div>
+                <div class="form-actions" style="float: left ;position: absolute;
+               bottom:1px;
+               left:20px;
+                width: 200px;
+                height: 100px;">
                     <input type="submit" class="btn btn-success" value="تعديل">
                     <a type="button" href="/account" class="btn btn-light">إلغاء</a>
                 </div>
             </form>
-        </div>
-    </div>
+    
 @endsection

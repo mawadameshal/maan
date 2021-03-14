@@ -28,15 +28,15 @@
             <div class="col-sm-3 adv-searchh">
                 <input type="text" class="form-control" name="id" value="{{old('id')}}" placeholder="الرقم المرجعي"/>
             </div>
-            <div class="col-sm-3 adv-searchh">
-                <input type="text" class="form-control" name="id_number" value="{{old('id_number')}}" placeholder="رقم الهوية"/>
-            </div>
+
             <div class="col-sm-3 adv-searchh">
                 <input type="text" class="form-control" name="first_name" value="{{old('first_name')}}" placeholder="اسم مقدم الاقتراح/ الشكوى"/>
             </div>
 
-           <div class="col-sm-12 adv-searchh"><br></div>
-
+            <div class="col-sm-3 adv-searchh">
+                <input type="text" class="form-control" name="id_number" value="{{old('id_number')}}" placeholder="رقم الهوية"/>
+            </div>
+            
             <div class="col-sm-3 adv-searchh">
                 <select name="category_name" class="form-control">
                     <option value="" >فئة مقدم الاقتراح/الشكوى</option>
@@ -44,6 +44,31 @@
                     <option value="1">غير مستفيد</option>
                 </select>
             </div>
+
+          
+           <div class="col-sm-12 adv-searchh"><br></div>
+
+           <div class="col-sm-3 adv-searchh">
+            <select name="project_name" class="form-control">
+                <option value="" selected>اسم المشروع</option>
+                @foreach($projects as $project)
+                    <option
+                        @if(request('project_name')===''.$project->id)selected
+                        @endif
+                        value="{{$project->name}}">{{$project->name}}</option>
+                @endforeach
+            </select>
+        </div>
+
+      
+    <div class="col-sm-3 adv-searchh">
+        <select name="active" class="form-control">
+            <option value="" > حالة المشروع</option>
+            <option value="1" >مستمر</option>
+            <option value="2">منتهي</option>
+        </select>
+    </div>
+        
 
             <div class="col-sm-3 adv-searchh">
                 <select name="sent_type" class="form-control">
@@ -64,8 +89,10 @@
                     @endforeach
                 </select>
             </div>
+            
+           <div class="col-sm-12 adv-searchh"><br></div>
 
-            <div class="col-sm-12 adv-searchh"><br></div>
+          
 
             <div class="col-sm-3 adv-searchh">
                 <select name="category_id" class="form-control">
@@ -80,6 +107,8 @@
                     @endforeach
                 </select>
             </div>
+
+           
             <div class="col-sm-3 adv-searchh">
                 <select name="status" class="form-control">
                     <option value="">حالة الرد</option>
@@ -89,8 +118,8 @@
                             {{$fstatus->name = 'لم يتم الرد'}}
                             <option {{request('status')==$fstatus->id?"selected":""}} value="{{$fstatus->id}}">
                                 @if($fstatus->id == 1)
-                                    لم يتم الرد
-                                @else
+                                قيد الدراسة
+                                    @else
                                     تم الرد
                                 @endif
 
@@ -99,6 +128,19 @@
                     @endforeach
                 </select>
             </div>
+
+            <div class="col-sm-3 adv-searchh">
+                <select name="replay_status" class="form-control">
+                    <option value="">حالة تبليغ الرد </option>
+                    <option value="2" >تم التبليغ</option>
+                    <option value="1">قيد التبليغ</option>
+                    <option value="0">لم يتم التبليغ</option>
+
+                </select>
+            </div>
+      
+                 
+
 
             <div class="col-sm-3 adv-searchh">
                 <select name="evaluate" class="form-control">
@@ -249,7 +291,7 @@
  <br>
     <div class="form-group row">
         <div class="col-sm-2 col-md-offset-10">
-            <a href="/account/project"  class="btn btn-success">الغاء الامر</a>
+            <a href="/account/project"  class="btn btn-success">إلغاء الأمر</a>
         </div>
     </div>
 @endsection

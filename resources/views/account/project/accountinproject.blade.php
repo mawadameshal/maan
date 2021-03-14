@@ -1,6 +1,6 @@
 @extends("layouts._account_layout")
 
-@section("title", "حسابات الموظفين ضمن المشروع  $item->name $item->code ")
+@section("title", "حسابات الموظفين ضمن مشروع  $item->name $item->code ")
 
 @section("content")
         <br>
@@ -27,29 +27,35 @@
                           @endforeach
                       </select>
                    </div>
-                  <div class="form-group adv-searchh" style="margin-left: 10px; margin-bottom: 10px;">
-               		<input type="email" class="form-control" name="email" id="email" value="{{old('email')}}"
-                       placeholder="البريد الالكتروني" style="width: 230px;"/>
-                 </div>
-                  <div class="form-group adv-searchh" style="margin-left: 10px; margin-bottom: 10px;">
-               		<input type="text" class="form-control" name="mobile" value="{{old('mobile')}}"
-                       placeholder="رقم التواصل" style="width: 230px;"/>
-                 </div>
-                  <div class="form-group adv-searchh" style="margin-left: 10px; margin-bottom: 10px;">
+                   <div class="form-group adv-searchh" style="margin-left: 10px; margin-bottom: 10px;">
 	                <select class="form-control" id="circles" name="circles" value="{{old('circles')}}" style="width: 230px;">
-                        <option value="">المستويات الإدارية</option>
+                        <option value="">المستوي الاداري</option>
                         @foreach($circles as $circle)
                             <option value="{{$circle->id}}"
                                     @if(request('circles')== $circle->id)selected @endif>{{$circle->name}}</option>
                         @endforeach
 	                </select>
 	            </div>
-            	<button type="submit"  name="theaction"  value="search" class="btn btn-primary adv-searchh"  style="margin-top: -10px;">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>   بحث
+                 
+                  <div class="form-group adv-searchh" style="margin-left: 10px; margin-bottom: 10px;">
+               		<input type="text" class="form-control" name="mobile" value="{{old('mobile')}}"
+                       placeholder="رقم التواصل" style="width: 230px;"/>
+                 </div>
+                 <div class="form-group adv-searchh" style="margin-left: 10px; margin-bottom: 10px;">
+                    <input type="email" class="form-control" name="email" id="email" value="{{old('email')}}"
+                    placeholder="البريد الالكتروني" style="width: 230px;"/>
+              </div>
+
+                 
+            </div>
+                    <div style="float: left;margin-left: 15px;margin-top: 10px;" >
+            	<button type="submit"  name="theaction"  value="search" class="btn btn-primary adv-searchh"  >
+                    <span class="glyphicon glyphicon-search" ></span>   بحث
             	</button>
+            </div>
 
              </form>
-             </div>
+            
         </div>
 
         <br>

@@ -18,18 +18,33 @@
     <span id="mybody">
         <div class="row">
               <form>
+                <div class="form-group row">
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" name="q" value="{{request('q')}}"
-                               placeholder="كلمة البحث"/>
+                        <button type="button"  style="width:110px;"  class="btn btn-primary adv-search-btnn">
+                            <span class="glyphicon glyphicon-search"></span>
+                            بحث متقدم
+                        </button>
+                       
                     </div>
-                    <div class="col-sm-4">
-
-                        <button type="submit"  name="theaction"  value="search" style="width:110px;margin-left: 10px;margin-bottom: 10px;" class="btn btn-primary adv-searchh">
-                          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                </div>
+                <br>
+                <div class="form-group adv-searchh" style="margin-left: 20px;">
+                    <select class="form-control" name="circles" style="width: 270px;">
+                        <option value="">المستوى الإداري</option>
+                        @foreach($circles as $circle)
+                            <option value="{{$circle->id}}"
+                                    @if(request('circles')== $circle->id)selected @endif>{{$circle->name}}</option>
+                        @endforeach
+                     </select>
+              </div>
+                    <div class="col-sm-12 adv-searchh"><br></div>
+                    
+                    <div class="col-sm-3 adv-searchh" style="float:left;">
+                        <button type="submit" name="theaction" title="بحث"  value="search"
+                                class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             بحث
-                      </button>
+                        </button>
                     </div>
-
              </form>
         </div>
         <div class="mt-3"></div>
@@ -82,4 +97,12 @@
         <br><br>
         <div class="alert alert-warning">نأسف لا يوجد بيانات لعرضها</div>
     @endif
+@endsection
+@section("js")
+        <script>
+            $('.adv-searchh').hide();
+            $('.adv-search-btnn').click(function(){
+                $('.adv-searchh').slideToggle("fast");
+            });
+        </script>
 @endsection

@@ -2,8 +2,13 @@
 
 @section("title", " عرض إشعارات النظام")
 @section("content")
+<div class="col-md-9">
+    <h4>هذه الواجهة مخصصة للتحكم في إدارة إشعارات النظام.</h4><br>
+  </div>
+
     <br>
     <br>
+
     <div class="form-group row filter-div">
         <div class="col-sm-12">
             <form>
